@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<title>Lolyas Mattestudio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --paper:#FBF8F1; --card:#FFFFFF; --card2:#F5F1E7;
+  --ink:#20304F; --muted:#6A7488; --line:#E7E1D2;
+  --teal:#0E9C93; --teal-d:#0B7E77;
+  --coral:#FF7A59; --coral-d:#E85F3C;
+  --violet:#7B61FF;
+  --good:#1CA36B; --good-bg:#E3F6EC;
+  --bad:#E24A3B; --bad-bg:#FDECE9;
+  --gold:#F0B429;
+  --shadow:0 10px 30px rgba(32,48,79,.10);
+  --grid:rgba(32,48,79,.045);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#12141B; --card:#1B1F2A; --card2:#232837;
+    --ink:#EBEEF5; --muted:#9AA3B6; --line:#2C3242;
+    --teal:#2AC0B5; --teal-d:#1B9B92;
+    --coral:#FF8C6E; --coral-d:#FF7A59;
+    --violet:#9B85FF;
+    --good:#39C486; --good-bg:#12312A;
+    --bad:#F0685A; --bad-bg:#3A1E1D;
+    --gold:#F5C651;
+    --shadow:0 12px 34px rgba(0,0,0,.42);
+    --grid:rgba(255,255,255,.035);
+  }
+}
+:root[data-theme="light"]{
+  --paper:#FBF8F1; --card:#FFFFFF; --card2:#F5F1E7; --ink:#20304F; --muted:#6A7488;
+  --line:#E7E1D2; --teal:#0E9C93; --coral:#FF7A59; --good:#1CA36B; --good-bg:#E3F6EC;
+  --bad:#E24A3B; --bad-bg:#FDECE9; --shadow:0 10px 30px rgba(32,48,79,.10); --grid:rgba(32,48,79,.045);
+}
+:root[data-theme="dark"]{
+  --paper:#12141B; --card:#1B1F2A; --card2:#232837; --ink:#EBEEF5; --muted:#9AA3B6;
+  --line:#2C3242; --teal:#2AC0B5; --coral:#FF8C6E; --good:#39C486; --good-bg:#12312A;
+  --bad:#F0685A; --bad-bg:#3A1E1D; --shadow:0 12px 34px rgba(0,0,0,.42); --grid:rgba(255,255,255,.035);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:"Segoe UI Variable","Segoe UI",ui-rounded,"SF Pro Rounded",system-ui,sans-serif;
+  color:var(--ink); background:var(--paper);
+  background-image:radial-gradient(1000px 520px at 50% -8%, rgba(255,122,89,.08), transparent 68%),radial-gradient(760px 420px at 100% 8%, rgba(14,156,147,.06), transparent 70%);
+  background-attachment:fixed;background-repeat:no-repeat;
+  line-height:1.55; -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 40px;min-height:100vh;display:flex;flex-direction:column}
+
+/* Header */
+header{display:flex;align-items:center;gap:14px;padding:6px 4px 14px}
+.mascot{
+  width:52px;height:52px;flex:none;border-radius:16px;display:grid;place-items:center;font-size:28px;
+  background:linear-gradient(150deg,var(--teal),var(--teal-d));box-shadow:var(--shadow);
+}
+.brand h1{font-size:1.28rem;margin:0;letter-spacing:-.02em;font-weight:800}
+.brand p{margin:0;color:var(--muted);font-size:.82rem;font-weight:600}
+.scorepill{margin-left:auto;display:flex;gap:8px;align-items:center}
+.chip{
+  background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;
+  font-size:.8rem;font-weight:700;display:flex;gap:6px;align-items:center;box-shadow:var(--shadow)
+}
+.chip b{color:var(--teal)}
+.themebtn{cursor:pointer;background:var(--card);border:1.5px solid var(--line);border-radius:999px;width:38px;height:38px;font-size:1rem}
+
+/* Chat */
+#chat{display:flex;flex-direction:column;gap:14px;padding:8px 2px 18px;flex:1}
+.msg{display:flex;gap:10px;align-items:flex-end;animation:pop .32s cubic-bezier(.2,.8,.3,1.1)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.avatar{width:34px;height:34px;flex:none;border-radius:12px;display:grid;place-items:center;font-size:19px;background:var(--card2);border:1.5px solid var(--line)}
+.bubble{
+  background:var(--card);border:1.5px solid var(--line);border-radius:18px 18px 18px 6px;
+  padding:12px 15px;max-width:82%;box-shadow:var(--shadow);font-size:.98rem
+}
+.bubble p{margin:0 0 8px}.bubble p:last-child{margin:0}
+.msg.me{flex-direction:row-reverse}
+.msg.me .bubble{
+  background:linear-gradient(150deg,var(--coral),var(--coral-d));color:#fff;border:none;
+  border-radius:18px 18px 6px 18px;font-weight:700
+}
+.msg.me .avatar{background:linear-gradient(150deg,var(--coral),var(--coral-d));color:#fff;border:none}
+.bubble.good{border-color:var(--good);background:var(--good-bg)}
+.bubble.bad{border-color:var(--bad);background:var(--bad-bg)}
+.tag{display:inline-block;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+  padding:2px 8px;border-radius:999px;margin-bottom:6px}
+.tag.g{background:var(--good);color:#fff}.tag.b{background:var(--bad);color:#fff}
+.steps{background:var(--card);border:1.5px dashed var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:.9rem}
+.steps .k{color:var(--muted);font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.eq{font-family:"Cambria Math",Cambria,Georgia,serif;font-size:1.02em}
+
+/* Panel (controls) */
+#panel{position:sticky;bottom:0;padding-top:10px}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:16px}
+.qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:10px}
+.level{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 10px;border-radius:999px}
+.level.latt{background:var(--good-bg);color:var(--good)}
+.level.medel{background:#FFF3DA;color:#B5820E}
+.level.svar{background:var(--bad-bg);color:var(--bad)}
+@media (prefers-color-scheme:dark){.level.medel{background:#3a300f}}
+.progress{height:7px;background:var(--card2);border-radius:99px;overflow:hidden;margin:10px 0 14px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--coral));transition:width .4s}
+.qtext{font-size:1.12rem;font-weight:700;margin:2px 0 14px;text-wrap:balance}
+.opts{display:grid;gap:8px}
+.opt,.btn{cursor:pointer;font-family:inherit;font-size:1rem;font-weight:700;border-radius:14px;border:1.5px solid var(--line);
+  background:var(--card2);color:var(--ink);padding:13px 15px;text-align:left;transition:.15s;display:flex;gap:10px;align-items:center}
+.opt:hover,.btn:hover{border-color:var(--teal);transform:translateY(-1px)}
+.opt .lt{width:26px;height:26px;flex:none;border-radius:8px;background:var(--card);border:1.5px solid var(--line);display:grid;place-items:center;font-size:.82rem;color:var(--muted)}
+.tfrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inrow{display:flex;gap:10px}
+.inrow input{flex:1;font-family:inherit;font-size:1.15rem;font-weight:800;padding:13px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--card2);color:var(--ink);min-width:0}
+.inrow input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,156,147,.18)}
+.btn.primary{background:linear-gradient(150deg,var(--teal),var(--teal-d));color:#fff;border:none;justify-content:center}
+.btn.coral{background:linear-gradient(150deg,var(--coral),var(--coral-d));color:#fff;border:none;justify-content:center}
+.btn.ghost{background:var(--card);justify-content:center}
+.btn.block{width:100%;justify-content:center;font-size:1.05rem;padding:15px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.actions .btn{flex:1}
+
+/* Menu / topics */
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab{flex:1;cursor:pointer;font-family:inherit;font-weight:800;font-size:.95rem;padding:11px;border-radius:14px;border:1.5px solid var(--line);background:var(--card2);color:var(--muted)}
+.tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.topics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.topic{cursor:pointer;text-align:left;font-family:inherit;border:1.5px solid var(--line);background:var(--card2);border-radius:16px;padding:14px;transition:.15s;display:flex;gap:12px;align-items:center}
+.topic:hover{border-color:var(--coral);transform:translateY(-2px);box-shadow:var(--shadow)}
+.topic .ic{font-size:1.7rem;flex:none}
+.topic .tt{font-weight:800;font-size:.98rem;line-height:1.2}
+.topic .ts{font-size:.75rem;color:var(--muted);font-weight:600}
+@media(max-width:520px){.topics{grid-template-columns:1fr}.qtext{font-size:1.05rem}}
+
+/* Theory card in chat */
+.theory{max-width:100%!important}
+.theory h3{margin:0 0 6px;font-size:1.15rem}
+.theory h4{margin:14px 0 4px;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--teal);display:flex;gap:7px;align-items:center}
+.theory ul{margin:4px 0;padding-left:20px}.theory li{margin:3px 0}
+.ex{background:var(--card2);border-left:3px solid var(--coral);border-radius:0 10px 10px 0;padding:9px 12px;margin:6px 0;font-size:.92rem}
+.summary{background:var(--good-bg);border-radius:12px;padding:10px 14px;margin-top:10px}
+.summary li{margin:4px 0;font-weight:600}
+.mini{font-size:.78rem;color:var(--muted);margin-top:6px}
+.hidden{display:none}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+.grade{font-size:2.6rem;font-weight:900;letter-spacing:-.03em}
+.gradebox{text-align:center;padding:8px 0}
+.bar{display:flex;height:12px;border-radius:99px;overflow:hidden;margin:12px 0;border:1.5px solid var(--line)}
+.bar i{display:block;height:100%}
+kbd{background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-family:inherit;font-weight:700;font-size:.85em}
+.footnote{text-align:center;color:var(--muted);font-size:.75rem;padding-top:20px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="mascot">🦉</div>
+    <div class="brand">
+      <h1>Lolyas Mattestudio</h1>
+      <p>Fröken Uggla · åk 6 &amp; 7 · Lgr22</p>
+    </div>
+    <div class="scorepill">
+      <div class="chip">⭐ <b id="score">0</b>/<span id="total">0</span></div>
+      <button class="themebtn" id="themebtn" title="Byt tema">🌙</button>
+    </div>
+  </header>
+
+  <div id="chat"></div>
+  <div id="panel"></div>
+
+  <div class="footnote">Byggd åt Lolya · innehåll enligt matteboken.se &amp; Lgr22</div>
+</div>
+
+<canvas class="confetti hidden" id="cfx"></canvas>
+
+<script>
+"use strict";
+const NAME="Lolya";
+
+/* ---------- DATA: topics with theory + questions ---------- */
+// q types: mc(opts,correct index) · tf(correct bool) · in(ans + accept[])
+const A=(...x)=>x; // accept helper
+
+const TOPICS=[
+/* ============ ÅK 6 ============ */
+{id:"brak",grade:6,ic:"🍕",name:"Bråk & decimaltal",sub:"Delar av det hela",
+ theory:{
+  intro:"Ett <b>bråk</b> visar en del av något helt. Talet <b>ovanför</b> strecket kallas <b>täljaren</b> (hur många delar vi har). Talet <b>under</b> kallas <b>nämnaren</b> (hur många lika delar det hela är delat i).",
+  ex:["<b>3/4</b> betyder: det hela är delat i 4 lika delar, och vi tar 3 av dem.",
+      "<b>Förkorta</b> 2/4 → dela täljare och nämnare med 2 → <b>1/2</b>.",
+      "<b>Förläng</b> 1/3 till nämnare 12 → gånga med 4 → <b>4/12</b>.",
+      "Bråk → decimal: 1/2 = 0,5 · 1/4 = 0,25 · 3/4 = 0,75."],
+  miss:["Att addera nämnarna: <b>1/4 + 1/4 ≠ 2/8</b>. Nämnaren står kvar → <b>2/4</b>.",
+        "Att glömma <b>gemensam nämnare</b> innan man plussar bråk med olika nämnare.",
+        "Tro att större nämnare = större bråk. 1/8 är <i>mindre</i> än 1/2."],
+  tips:["🍕 Tänk pizza: nämnaren = hur många bitar pizzan skärs i.",
+        "För att jämföra bråk – gör om till <b>samma nämnare</b> eller till decimaltal."],
+  sum:["Täljare = ovanför, nämnare = under strecket.","Samma nämnare krävs för + och −.","Förkorta = dela, förläng = gånga (samma tal upp och ner)."]},
+ q:{latt:[
+  {t:"mc",q:"Vad kallas talet <b>ovanför</b> bråkstrecket?",opts:["Nämnaren","Täljaren","Decimalen","Resten"],correct:1,ex:"Talet ovanför strecket är <b>täljaren</b> – den visar hur många delar vi tar."},
+  {t:"tf",q:"1/2 är lika mycket som 2/4.",correct:true,ex:"Förläng 1/2 med 2 → 2/4. Samma värde! ✔"},
+  {t:"in",q:"Hur många fjärdedelar (1/4) går det på 1 hel?",ans:"4",ex:"En hel = 4/4, alltså <b>4</b> fjärdedelar."},
+  {t:"mc",q:"Vilket bråk är störst?",opts:["1/2","1/3","1/4","1/5"],correct:0,ex:"Ju mindre nämnare, desto större bit. <b>1/2</b> är störst."},
+  {t:"in",q:"Räkna ut: 3/8 + 2/8 = ? (svara som bråk, t.ex. 5/8)",ans:"5/8",accept:A("5/8"),ex:"Samma nämnare → addera bara täljarna: 3+2=5 → <b>5/8</b>."},
+  {t:"mc",q:"Skriv 1/2 i decimalform.",opts:["0,2","0,5","0,12","1,2"],correct:1,ex:"1 delat på 2 = <b>0,5</b>."},
+  {t:"tf",q:"5/5 är lika med 1 hel.",correct:true,ex:"Alla fem delar av fem → hela. 5/5 = <b>1</b>. ✔"},
+  {t:"in",q:"Förkorta 2/4 så långt som möjligt.",ans:"1/2",accept:A("1/2","0,5","0.5"),ex:"Dela täljare och nämnare med 2 → <b>1/2</b>."},
+  {t:"mc",q:"Vad kallas talet <b>under</b> bråkstrecket?",opts:["Täljaren","Summan","Nämnaren","Faktorn"],correct:2,ex:"Talet under strecket är <b>nämnaren</b>."},
+  {t:"in",q:"Räkna ut: 6/8 − 2/8 = ? (svara som bråk)",ans:"4/8",accept:A("4/8","1/2","0,5","0.5"),ex:"Samma nämnare → 6−2=4 → <b>4/8</b> (som är samma som 1/2)."}
+ ],medel:[
+  {t:"in",q:"1/2 + 1/4 = ? (svara som bråk)",ans:"3/4",accept:A("3/4","0,75","0.75"),ex:"Gemensam nämnare 4: 1/2 = 2/4. Då 2/4 + 1/4 = <b>3/4</b>."},
+  {t:"mc",q:"Skriv 3/4 i decimalform.",opts:["0,34","0,75","0,25","0,43"],correct:1,ex:"3 delat på 4 = <b>0,75</b>."},
+  {t:"in",q:"Förläng 1/3 till nämnaren 12. Svara som bråk.",ans:"4/12",accept:A("4/12"),ex:"12 ÷ 3 = 4, så gånga upp och ner med 4 → <b>4/12</b>."},
+  {t:"in",q:"2/3 + 1/6 = ? (svara som bråk)",ans:"5/6",accept:A("5/6"),ex:"Gemensam nämnare 6: 2/3 = 4/6. Då 4/6 + 1/6 = <b>5/6</b>."},
+  {t:"tf",q:"7/10 är lika med 0,7.",correct:true,ex:"Tiondelar → 7/10 = <b>0,7</b>. ✔"},
+  {t:"in",q:"5/6 − 1/3 = ? (svara som bråk)",ans:"1/2",accept:A("1/2","3/6","0,5","0.5"),ex:"1/3 = 2/6. Då 5/6 − 2/6 = 3/6 = <b>1/2</b>."},
+  {t:"mc",q:"Vilket bråk är störst?",opts:["3/5","2/3","1/2","4/9"],correct:1,ex:"Gemensam nämnare 15: 2/3 = 10/15 och 3/5 = 9/15. Störst är <b>2/3</b>."},
+  {t:"in",q:"Skriv blandade talet 1 1/2 som ett bråk (täljare/nämnare).",ans:"3/2",accept:A("3/2"),ex:"1 hel = 2/2. 2/2 + 1/2 = <b>3/2</b>."},
+  {t:"in",q:"Hur mycket är 3/4 av 20?",ans:"15",ex:"20 ÷ 4 = 5 (en fjärdedel). 5 × 3 = <b>15</b>."},
+  {t:"mc",q:"Skriv 0,25 som bråk i enklaste form.",opts:["1/2","2/5","1/4","1/5"],correct:2,ex:"0,25 = 25/100 = <b>1/4</b>."}
+ ],svar:[
+  {t:"in",q:"2/3 + 3/4 = ? (svara som bråk, t.ex. 17/12)",ans:"17/12",accept:A("17/12","1 5/12"),ex:"Gemensam nämnare 12: 2/3 = 8/12, 3/4 = 9/12. Summa = <b>17/12</b> (= 1 5/12)."},
+  {t:"in",q:"5/6 − 3/8 = ? (svara som bråk)",ans:"11/24",accept:A("11/24"),ex:"Gemensam nämnare 24: 5/6 = 20/24, 3/8 = 9/24. 20/24 − 9/24 = <b>11/24</b>."},
+  {t:"in",q:"Multiplicera: 2/5 · 3/4 = ? (svara i enklaste form)",ans:"3/10",accept:A("3/10","6/20"),ex:"Gånga rakt: 2·3=6 och 5·4=20 → 6/20. Förkorta med 2 → <b>3/10</b>."},
+  {t:"in",q:"3/4 ÷ 1/2 = ? (svara som bråk)",ans:"3/2",accept:A("3/2","6/4","1 1/2"),ex:"Dividera = gånga med det omvända: 3/4 · 2/1 = 6/4 = <b>3/2</b>."},
+  {t:"in",q:"En pizza delas i 8 bitar. Lolya äter 3 och Sam äter 2. Hur stor del är kvar? (bråk)",ans:"3/8",accept:A("3/8"),ex:"Ätit: 3+2 = 5 bitar. Kvar: 8−5 = 3 bitar av 8 → <b>3/8</b>."},
+  {t:"in",q:"Hur mycket är 2/3 av 45?",ans:"30",ex:"45 ÷ 3 = 15 (en tredjedel). 15 × 2 = <b>30</b>."},
+  {t:"in",q:"7/10 + 4/5 = ? (svara som bråk)",ans:"15/10",accept:A("15/10","3/2","1 1/2","1,5"),ex:"4/5 = 8/10. Då 7/10 + 8/10 = <b>15/10</b> (= 3/2 = 1,5)."},
+  {t:"mc",q:"Vilket bråk ligger <b>mellan</b> 1/2 och 3/4?",opts:["1/4","5/8","7/8","1/3"],correct:1,ex:"I åttondelar: 1/2 = 4/8 och 3/4 = 6/8. <b>5/8</b> ligger mitt emellan."},
+  {t:"in",q:"Ett recept behöver 3/4 liter mjölk. Du gör dubbel sats. Hur många liter mjölk? (decimal)",ans:"1,5",accept:A("1,5","1.5","3/2"),ex:"Dubbelt av 3/4 = 6/4 = <b>1,5</b> liter."},
+  {t:"in",q:"Förkorta 18/24 så långt som möjligt.",ans:"3/4",accept:A("3/4","0,75","0.75"),ex:"Största gemensamma delaren är 6: 18÷6=3, 24÷6=4 → <b>3/4</b>."}
+ ]}},
+
+{id:"procent",grade:6,ic:"💯",name:"Procent",sub:"Hundradelar",
+ theory:{
+  intro:"<b>Procent</b> betyder <i>hundradelar</i>. 1 % = 1/100 = 0,01. Hela något är alltid <b>100 %</b>. Procent, bråk och decimaltal är tre sätt att skriva samma sak.",
+  ex:["50 % = 1/2 = 0,5 (hälften).","25 % = 1/4 = 0,25 · 10 % = 1/10 = 0,1.",
+      "Räkna 30 % av 200: 200 ÷ 100 = 2 (det är 1 %). 2 × 30 = <b>60</b>.",
+      "Andel i procent: 15 av 60 → 15/60 = 0,25 = <b>25 %</b>."],
+  miss:["Att glömma dela med 100 – 25 % av 80 är inte 25 utan <b>20</b>.",
+        "Blanda ihop <b>procentenheter</b> och procent.",
+        "Vid rabatt: räkna rabatten <i>och</i> dra bort den. 20 % rabatt på 500 → 500 − 100 = <b>400</b>."],
+  tips:["💡 1 % av ett tal = talet ÷ 100. Sedan gångar du med hur många procent du vill ha.",
+        "10 % = flytta decimalen ett steg åt vänster (10 % av 250 = 25)."],
+  sum:["Procent = hundradelar, helheten = 100 %.","1 % = talet ÷ 100.","Andel: del ÷ det hela → gånga med 100 för procent."]},
+ q:{latt:[
+  {t:"in",q:"Hur mycket är 50 % av 200?",ans:"100",ex:"50 % = hälften. Hälften av 200 = <b>100</b>."},
+  {t:"mc",q:"25 % är samma som vilket bråk?",opts:["1/2","1/3","1/4","1/5"],correct:2,ex:"25/100 = <b>1/4</b>."},
+  {t:"in",q:"Hur mycket är 10 % av 90?",ans:"9",ex:"10 % = talet ÷ 10 = <b>9</b>."},
+  {t:"tf",q:"100 % av ett tal är hela talet.",correct:true,ex:"100 % = allt. ✔"},
+  {t:"in",q:"Hur mycket är 1 % av 300?",ans:"3",ex:"1 % = 300 ÷ 100 = <b>3</b>."},
+  {t:"mc",q:"Skriv 0,5 i procent.",opts:["5 %","0,5 %","50 %","500 %"],correct:2,ex:"0,5 = 50/100 = <b>50 %</b>."},
+  {t:"in",q:"Hur mycket är 20 % av 50?",ans:"10",ex:"1 % av 50 = 0,5. 0,5 × 20 = <b>10</b>."},
+  {t:"tf",q:"50 % är samma som 0,5.",correct:true,ex:"50/100 = <b>0,5</b>. ✔"},
+  {t:"in",q:"Hur mycket är 100 % av 45?",ans:"45",ex:"100 % = hela talet = <b>45</b>."},
+  {t:"mc",q:"Hälften uttryckt i procent är …",opts:["25 %","50 %","75 %","100 %"],correct:1,ex:"Hälften = <b>50 %</b>."}
+ ],medel:[
+  {t:"in",q:"Hur mycket är 30 % av 150?",ans:"45",ex:"1 % av 150 = 1,5. 1,5 × 30 = <b>45</b>."},
+  {t:"in",q:"Hur mycket är 15 % av 200?",ans:"30",ex:"1 % av 200 = 2. 2 × 15 = <b>30</b>."},
+  {t:"mc",q:"Skriv 0,75 i procent.",opts:["7,5 %","75 %","0,75 %","750 %"],correct:1,ex:"0,75 = 75/100 = <b>75 %</b>."},
+  {t:"in",q:"Hur många procent är 20 av 80? (svara utan %-tecken)",ans:"25",ex:"20/80 = 0,25 = <b>25 %</b>."},
+  {t:"in",q:"Hur mycket är 5 % av 60?",ans:"3",ex:"1 % av 60 = 0,6. 0,6 × 5 = <b>3</b>."},
+  {t:"tf",q:"1/5 är samma som 20 %.",correct:true,ex:"1/5 = 20/100 = <b>20 %</b>. ✔"},
+  {t:"in",q:"Hur mycket är 40 % av 25?",ans:"10",ex:"1 % av 25 = 0,25. 0,25 × 40 = <b>10</b>."},
+  {t:"in",q:"Ett par skor kostar 400 kr. Rabatten är 25 %. Hur många kr är rabatten?",ans:"100",ex:"25 % av 400 = 400 ÷ 4 = <b>100 kr</b>."},
+  {t:"mc",q:"Hur mycket är 12 % av 50?",opts:["4","5","6","12"],correct:2,ex:"1 % av 50 = 0,5. 0,5 × 12 = <b>6</b>."},
+  {t:"in",q:"Hur många procent är 30 av 120?",ans:"25",ex:"30/120 = 0,25 = <b>25 %</b>."}
+ ],svar:[
+  {t:"in",q:"En tröja kostar 500 kr och priset höjs med 20 %. Vad är nya priset i kr?",ans:"600",ex:"20 % av 500 = 100. Nytt pris = 500 + 100 = <b>600 kr</b>."},
+  {t:"in",q:"En vara kostar 800 kr och sänks med 25 %. Nytt pris i kr?",ans:"600",ex:"25 % av 800 = 200. Nytt pris = 800 − 200 = <b>600 kr</b>."},
+  {t:"in",q:"Hur mycket är 35 % av 240?",ans:"84",ex:"1 % av 240 = 2,4. 2,4 × 35 = <b>84</b>."},
+  {t:"in",q:"Priset ökade från 200 kr till 250 kr. Hur många procent är ökningen?",ans:"25",ex:"Ökning = 50 kr. 50/200 = 0,25 = <b>25 %</b>."},
+  {t:"in",q:"Hur mycket är 8 % av 350?",ans:"28",ex:"1 % av 350 = 3,5. 3,5 × 8 = <b>28</b>."},
+  {t:"in",q:"Lolya sparar 15 % av sin månadspeng på 300 kr. Hur många kr sparar hon?",ans:"45",ex:"15 % av 300 = 3 × 15 = <b>45 kr</b>."},
+  {t:"in",q:"En vara sänks med 30 % och kostar då 350 kr. Vad var originalpriset i kr?",ans:"500",ex:"350 kr är 70 % av priset. 1 % = 350 ÷ 70 = 5. 100 % = <b>500 kr</b>."},
+  {t:"in",q:"Hur många procent är 45 av 60?",ans:"75",ex:"45/60 = 0,75 = <b>75 %</b>."},
+  {t:"in",q:"Momsen är 25 %. En vara kostar 200 kr utan moms. Pris med moms i kr?",ans:"250",ex:"25 % av 200 = 50. 200 + 50 = <b>250 kr</b>."},
+  {t:"in",q:"Hur mycket är 150 % av 40?",ans:"60",ex:"100 % = 40 och 50 % = 20. 40 + 20 = <b>60</b>."}
+ ]}},
+
+{id:"geometri",grade:6,ic:"📐",name:"Omkrets & Area",sub:"Runt om och yta",
+ theory:{
+  intro:"<b>Omkrets</b> är sträckan runt en figur – lägg ihop alla sidor. Mäts i cm, m … <b>Area</b> är ytan inuti – hur mycket plats figuren täcker. Mäts i <b>kvadratenheter</b> (cm², m²).",
+  ex:["Rektangel: <b>Area = längd · bredd</b>. En rektangel 4 × 3 cm → 12 cm².",
+      "Kvadrat: alla sidor lika. Sida 5 → omkrets 5·4 = 20 cm, area 5·5 = 25 cm².",
+      "Triangel: <b>Area = (bas · höjd) ÷ 2</b>. Bas 8, höjd 5 → (8·5)/2 = 20 cm²."],
+  miss:["Blanda ihop omkrets och area. Omkrets = runt om, area = insidan.",
+        "Glömma <b>÷ 2</b> i triangelns area.",
+        "Skriva fel enhet: area ska ha <b>²</b> (cm²)."],
+  tips:["📏 Omkrets = ett snöre runt figuren. Area = hur många rutor får plats inuti.",
+        "Kvadrat med area A → sidan är √A. Area 36 → sida 6."],
+  sum:["Omkrets = summan av alla sidor (längdenhet).","Area rektangel = längd · bredd.","Area triangel = bas · höjd ÷ 2. Enhet: kvadratenhet."]},
+ q:{latt:[
+  {t:"in",q:"En kvadrat har sidan 5 cm. Vad är omkretsen i cm?",ans:"20",ex:"4 lika sidor: 5 × 4 = <b>20 cm</b>."},
+  {t:"mc",q:"Vilken formel ger arean av en rektangel?",opts:["sida + sida","längd · bredd","(bas · höjd)/2","4 · sida"],correct:1,ex:"Area rektangel = <b>längd · bredd</b>."},
+  {t:"in",q:"En rektangel är 4 cm × 3 cm. Vad är arean i cm²?",ans:"12",ex:"4 · 3 = <b>12 cm²</b>."},
+  {t:"tf",q:"Omkrets mäts i cm och area i cm².",correct:true,ex:"Ja – area har alltid kvadratenhet. ✔"},
+  {t:"in",q:"En rektangel är 6 cm och 2 cm. Omkrets i cm?",ans:"16",ex:"6 + 2 + 6 + 2 = <b>16 cm</b>."},
+  {t:"in",q:"En kvadrat har sidan 4 cm. Area i cm²?",ans:"16",ex:"4 · 4 = <b>16 cm²</b>."},
+  {t:"mc",q:"Vilken enhet passar för area?",opts:["cm","cm²","kg","liter"],correct:1,ex:"Area anges i kvadratenheter, t.ex. <b>cm²</b>."},
+  {t:"in",q:"En triangel har sidorna 3, 4 och 5 cm. Omkrets i cm?",ans:"12",ex:"3 + 4 + 5 = <b>12 cm</b>."},
+  {t:"tf",q:"Alla sidor i en kvadrat är lika långa.",correct:true,ex:"Det är definitionen av en kvadrat. ✔"},
+  {t:"in",q:"En liksidig triangel har sidan 6 cm. Omkrets i cm?",ans:"18",ex:"3 lika sidor: 6 × 3 = <b>18 cm</b>."}
+ ],medel:[
+  {t:"in",q:"En triangel har bas 8 cm och höjd 5 cm. Area i cm²?",ans:"20",ex:"(8 · 5) ÷ 2 = 40 ÷ 2 = <b>20 cm²</b>."},
+  {t:"in",q:"En rektangel är 12 cm × 7 cm. Area i cm²?",ans:"84",ex:"12 · 7 = <b>84 cm²</b>."},
+  {t:"in",q:"En kvadrat har arean 36 cm². Vad är omkretsen i cm?",ans:"24",ex:"Sidan = √36 = 6. Omkrets = 6 · 4 = <b>24 cm</b>."},
+  {t:"in",q:"En rektangel har area 24 cm² och bredd 4 cm. Vad är längden i cm?",ans:"6",ex:"Längd = area ÷ bredd = 24 ÷ 4 = <b>6 cm</b>."},
+  {t:"in",q:"En triangel har bas 10 cm och höjd 6 cm. Area i cm²?",ans:"30",ex:"(10 · 6) ÷ 2 = <b>30 cm²</b>."},
+  {t:"mc",q:"Vilken formel ger arean av en triangel?",opts:["bas · höjd","(bas · höjd)/2","bas + höjd","4 · bas"],correct:1,ex:"Triangelns area = <b>(bas · höjd) ÷ 2</b>."},
+  {t:"in",q:"En rektangel är 15 cm × 10 cm. Omkrets i cm?",ans:"50",ex:"2 · (15 + 10) = 2 · 25 = <b>50 cm</b>."},
+  {t:"in",q:"En kvadrat har omkretsen 28 cm. Hur lång är en sida i cm?",ans:"7",ex:"Sida = 28 ÷ 4 = <b>7 cm</b>."},
+  {t:"in",q:"En kvadrat har sidan 9 cm. Area i cm²?",ans:"81",ex:"9 · 9 = <b>81 cm²</b>."},
+  {t:"tf",q:"En triangel med bas 6 cm och höjd 4 cm har arean 12 cm².",correct:true,ex:"(6 · 4)/2 = 24/2 = <b>12 cm²</b>. ✔"}
+ ],svar:[
+  {t:"in",q:"En kvadrat har omkretsen 40 cm. Vad är arean i cm²?",ans:"100",ex:"Sidan = 40 ÷ 4 = 10. Area = 10 · 10 = <b>100 cm²</b>."},
+  {t:"in",q:"Ett rum är 5 m × 4 m. Hur många m² matta behövs?",ans:"20",ex:"Area = 5 · 4 = <b>20 m²</b>."},
+  {t:"in",q:"En figur består av en rektangel 6×4 cm och en rektangel 2×3 cm ihop. Total area i cm²?",ans:"30",ex:"6·4 = 24 och 2·3 = 6. Summa = 24 + 6 = <b>30 cm²</b>."},
+  {t:"in",q:"En triangel har area 30 cm² och bas 10 cm. Vad är höjden i cm?",ans:"6",ex:"Area = bas·höjd/2 → 30 = 10·höjd/2 → höjd = 60 ÷ 10 = <b>6 cm</b>."},
+  {t:"in",q:"En trädgård är 20 m × 15 m och ska ha staket runt om. Hur många meter staket?",ans:"70",ex:"Omkrets = 2 · (20 + 15) = 2 · 35 = <b>70 m</b>."},
+  {t:"in",q:"En rektangel har längd 8 cm och area 56 cm². Vad är omkretsen i cm?",ans:"30",ex:"Bredd = 56 ÷ 8 = 7. Omkrets = 2 · (8 + 7) = <b>30 cm</b>."},
+  {t:"in",q:"En vägg är 3 m × 2,5 m. En burk färg räcker till 5 m². Hur många burkar behövs?",ans:"2",ex:"Area = 3 · 2,5 = 7,5 m². 7,5 ÷ 5 = 1,5 → man måste köpa <b>2 burkar</b>."},
+  {t:"in",q:"En kvadrat har arean 49 cm². Vad är omkretsen i cm?",ans:"28",ex:"Sidan = √49 = 7. Omkrets = 7 · 4 = <b>28 cm</b>."},
+  {t:"in",q:"En triangel har bas 12 cm och höjd 9 cm. Area i cm²?",ans:"54",ex:"(12 · 9) ÷ 2 = 108 ÷ 2 = <b>54 cm²</b>."},
+  {t:"in",q:"En rektangel är 2,5 m × 4 m. Area i m²?",ans:"10",ex:"2,5 · 4 = <b>10 m²</b>."}
+ ]}},
+
+{id:"raknesatt",grade:6,ic:"➗",name:"De fyra räknesätten",sub:"+ − · ÷",
+ theory:{
+  intro:"De fyra räknesätten är <b>addition (+)</b>, <b>subtraktion (−)</b>, <b>multiplikation (·)</b> och <b>division (÷)</b>. Multiplikation är upprepad addition, division är att dela upp i lika delar.",
+  ex:["Prioritering: räkna först det som står inom <b>parentes</b>, sedan · och ÷, sist + och −.",
+      "Exempel: (12 + 8) · 5 = 20 · 5 = <b>100</b>.",
+      "Överslag: 199 + 402 ≈ 200 + 400 = <b>600</b> (ungefär)."],
+  miss:["Räkna vänster-till-höger utan att tänka på prioritering.",
+        "Glömma parentesen: 12 + 8 · 5 = 12 + 40 = 52, <i>inte</i> 100.",
+        "Blanda ihop rest och kvot i division."],
+  tips:["📎 Minnesregel: <b>P</b>arentes · <b>M</b>ultiplikation/Division · <b>A</b>ddition/Subtraktion.",
+        "Kontrollera division med multiplikation: 72 ÷ 9 = 8 eftersom 8 · 9 = 72."],
+  sum:["Fyra räknesätt: + − · ÷.","Parentes först, sedan · och ÷, sist + och −.","Överslag ger ett ungefärligt svar snabbt."]},
+ q:{latt:[
+  {t:"in",q:"Räkna ut: 47 + 38",ans:"85",ex:"47 + 38 = <b>85</b>."},
+  {t:"in",q:"Räkna ut: 92 − 47",ans:"45",ex:"92 − 47 = <b>45</b>."},
+  {t:"in",q:"Räkna ut: 8 · 7",ans:"56",ex:"8 · 7 = <b>56</b>."},
+  {t:"in",q:"Räkna ut: 72 ÷ 9",ans:"8",ex:"72 ÷ 9 = <b>8</b> (eftersom 8 · 9 = 72)."},
+  {t:"in",q:"Räkna ut: 6 · 9",ans:"54",ex:"6 · 9 = <b>54</b>."},
+  {t:"in",q:"Räkna ut: 100 − 64",ans:"36",ex:"100 − 64 = <b>36</b>."},
+  {t:"in",q:"Räkna ut: 125 + 75",ans:"200",ex:"125 + 75 = <b>200</b>."},
+  {t:"in",q:"Räkna ut: 12 · 5",ans:"60",ex:"12 · 5 = <b>60</b>."},
+  {t:"in",q:"Räkna ut: 84 ÷ 7",ans:"12",ex:"84 ÷ 7 = <b>12</b>."},
+  {t:"in",q:"Räkna ut: 45 + 55",ans:"100",ex:"45 + 55 = <b>100</b>."}
+ ],medel:[
+  {t:"in",q:"Räkna ut: 234 + 189",ans:"423",ex:"234 + 189 = <b>423</b>."},
+  {t:"in",q:"Räkna ut: 512 − 278",ans:"234",ex:"512 − 278 = <b>234</b>."},
+  {t:"in",q:"Räkna ut: 24 · 6",ans:"144",ex:"24 · 6 = <b>144</b>."},
+  {t:"in",q:"Räkna ut: 144 ÷ 12",ans:"12",ex:"144 ÷ 12 = <b>12</b>."},
+  {t:"in",q:"Räkna ut: 15 · 20",ans:"300",ex:"15 · 20 = <b>300</b>."},
+  {t:"in",q:"Räkna ut: 1000 − 375",ans:"625",ex:"1000 − 375 = <b>625</b>."},
+  {t:"in",q:"Räkna ut: 48 · 5",ans:"240",ex:"48 · 5 = <b>240</b>."},
+  {t:"in",q:"Räkna ut: 360 ÷ 8",ans:"45",ex:"360 ÷ 8 = <b>45</b>."},
+  {t:"mc",q:"Gör ett överslag: 199 + 402 ≈ ?",opts:["500","600","700","800"],correct:1,ex:"≈ 200 + 400 = <b>600</b>."},
+  {t:"in",q:"Räkna ut: 7 · 8 + 10",ans:"66",ex:"Multiplikation först: 7·8 = 56. Sedan 56 + 10 = <b>66</b>."}
+ ],svar:[
+  {t:"in",q:"Räkna ut: 45 · 12",ans:"540",ex:"45 · 12 = 45·10 + 45·2 = 450 + 90 = <b>540</b>."},
+  {t:"in",q:"Räkna ut: 625 ÷ 25",ans:"25",ex:"625 ÷ 25 = <b>25</b> (eftersom 25 · 25 = 625)."},
+  {t:"in",q:"Räkna ut: (12 + 8) · 5",ans:"100",ex:"Parentes först: 12+8 = 20. Sedan 20 · 5 = <b>100</b>."},
+  {t:"in",q:"Räkna ut: 144 ÷ 12 + 6 · 3",ans:"30",ex:"Först · och ÷: 144÷12 = 12 och 6·3 = 18. Sedan 12 + 18 = <b>30</b>."},
+  {t:"in",q:"Räkna ut: 3 · 4 · 5",ans:"60",ex:"3·4 = 12, 12·5 = <b>60</b>."},
+  {t:"in",q:"Räkna ut: 1250 − 999",ans:"251",ex:"1250 − 999 = 1250 − 1000 + 1 = <b>251</b>."},
+  {t:"in",q:"Räkna ut: 18 · 15",ans:"270",ex:"18 · 15 = 18·10 + 18·5 = 180 + 90 = <b>270</b>."},
+  {t:"in",q:"Räkna ut: 96 ÷ 4 · 3",ans:"72",ex:"Från vänster: 96÷4 = 24, 24·3 = <b>72</b>."},
+  {t:"in",q:"6 påsar innehåller 24 kulor var. Hur många kulor totalt?",ans:"144",ex:"6 · 24 = <b>144 kulor</b>."},
+  {t:"in",q:"200 kr delas lika mellan 8 barn. Hur många kr får var och en?",ans:"25",ex:"200 ÷ 8 = <b>25 kr</b>."}
+ ]}},
+
+{id:"enheter",grade:6,ic:"📏",name:"Enheter",sub:"Längd, volym, vikt & tid",
+ theory:{
+  intro:"Vi mäter olika saker med olika <b>enheter</b>. <b>Längd:</b> mm, cm, dm, m, km. <b>Volym:</b> ml, cl, dl, liter. <b>Vikt (massa):</b> g, hg, kg, ton. <b>Tid:</b> sekund, minut, timme. Att byta enhet betyder att gånga eller dela med 10, 100 eller 1000.",
+  ex:["1 m = 100 cm · 1 cm = 10 mm · 1 km = 1000 m","1 liter = 10 dl = 100 cl = 1000 ml","1 kg = 1000 g · 1 kg = 10 hg · 1 ton = 1000 kg","1 timme = 60 min · 1 min = 60 s · 1 dygn = 24 h"],
+  miss:["Gånga när man ska dela (eller tvärtom) vid enhetsbyte.","Blanda ihop dl och cl (1 dl = 10 cl).","Glömma att 1 timme = 60 min, inte 100."],
+  tips:["📏 Från <b>stor</b> enhet till <b>liten</b> → gånga. Från liten till stor → dela.","Tänk en trappa: varje steg är ·10 eller ÷10."],
+  sum:["Längd: mm–cm–dm–m–km.","Volym: ml–cl–dl–liter.","Vikt: g–hg–kg–ton. Tid: s–min–h."]},
+ q:{latt:[
+  {t:"in",q:"Hur många cm är 1 m?",ans:"100",ex:"1 m = <b>100 cm</b>."},
+  {t:"in",q:"Hur många mm är 1 cm?",ans:"10",ex:"1 cm = <b>10 mm</b>."},
+  {t:"in",q:"Hur många gram är 1 kg?",ans:"1000",ex:"1 kg = <b>1000 g</b>."},
+  {t:"in",q:"Hur många minuter är 1 timme?",ans:"60",ex:"1 timme = <b>60 min</b>."},
+  {t:"in",q:"Hur många dl är 1 liter?",ans:"10",ex:"1 liter = <b>10 dl</b>."},
+  {t:"mc",q:"1 km är hur många meter?",opts:["100","1000","10","10000"],correct:1,ex:"1 km = <b>1000 m</b>."},
+  {t:"tf",q:"1 kg är lika med 1000 g.",correct:true,ex:"Ja, 1 kg = <b>1000 g</b>. ✔"},
+  {t:"in",q:"Hur många sekunder är 1 minut?",ans:"60",ex:"1 min = <b>60 s</b>."},
+  {t:"in",q:"Hur många cl är 1 dl?",ans:"10",ex:"1 dl = <b>10 cl</b>."},
+  {t:"in",q:"Hur många hg är 1 kg?",ans:"10",ex:"1 kg = <b>10 hg</b>."}
+ ],medel:[
+  {t:"in",q:"2,5 m = ? cm",ans:"250",ex:"2,5 · 100 = <b>250 cm</b>."},
+  {t:"in",q:"3 kg = ? g",ans:"3000",ex:"3 · 1000 = <b>3000 g</b>."},
+  {t:"in",q:"1500 m = ? km (decimal)",ans:"1,5",accept:A("1,5","1.5"),ex:"1500 ÷ 1000 = <b>1,5 km</b>."},
+  {t:"in",q:"2 liter = ? dl",ans:"20",ex:"2 · 10 = <b>20 dl</b>."},
+  {t:"in",q:"90 min = ? timmar (decimal)",ans:"1,5",accept:A("1,5","1.5"),ex:"90 ÷ 60 = <b>1,5 h</b>."},
+  {t:"in",q:"250 cm = ? m (decimal)",ans:"2,5",accept:A("2,5","2.5"),ex:"250 ÷ 100 = <b>2,5 m</b>."},
+  {t:"in",q:"4 dl = ? ml",ans:"400",ex:"4 dl = 4 · 100 = <b>400 ml</b>."},
+  {t:"in",q:"2000 g = ? kg",ans:"2",ex:"2000 ÷ 1000 = <b>2 kg</b>."},
+  {t:"mc",q:"0,5 km = ? m",opts:["50","500","5000","5"],correct:1,ex:"0,5 · 1000 = <b>500 m</b>."},
+  {t:"in",q:"3,5 timmar = ? minuter",ans:"210",ex:"3,5 · 60 = <b>210 min</b>."}
+ ],svar:[
+  {t:"in",q:"1,25 liter = ? ml",ans:"1250",ex:"1,25 · 1000 = <b>1250 ml</b>."},
+  {t:"in",q:"2 timmar 30 minuter = ? minuter",ans:"150",ex:"2 · 60 + 30 = 120 + 30 = <b>150 min</b>."},
+  {t:"in",q:"750 g = ? kg (decimal)",ans:"0,75",accept:A("0,75","0.75"),ex:"750 ÷ 1000 = <b>0,75 kg</b>."},
+  {t:"in",q:"En bräda är 2,4 m. Hur många cm?",ans:"240",ex:"2,4 · 100 = <b>240 cm</b>."},
+  {t:"in",q:"En flaska rymmer 1,5 liter. Hur många cl?",ans:"150",ex:"1,5 · 100 = <b>150 cl</b>."},
+  {t:"in",q:"3 dygn = ? timmar",ans:"72",ex:"3 · 24 = <b>72 h</b>."},
+  {t:"in",q:"0,25 kg = ? g",ans:"250",ex:"0,25 · 1000 = <b>250 g</b>."},
+  {t:"in",q:"En löprunda är 3500 m. Hur många km (decimal)?",ans:"3,5",accept:A("3,5","3.5"),ex:"3500 ÷ 1000 = <b>3,5 km</b>."},
+  {t:"in",q:"5 flaskor à 33 cl. Hur många liter totalt (decimal)?",ans:"1,65",accept:A("1,65","1.65"),ex:"5 · 33 = 165 cl. 165 ÷ 100 = <b>1,65 liter</b>."},
+  {t:"in",q:"Ett recept behöver 4 dl mjölk. Du har 1 liter. Hur många dl blir kvar?",ans:"6",ex:"1 liter = 10 dl. 10 − 4 = <b>6 dl</b>."}
+ ]}},
+
+{id:"negativa",grade:6,ic:"🌡️",name:"Negativa tal",sub:"Tal under noll",
+ theory:{
+  intro:"<b>Negativa tal</b> är tal som är mindre än 0, t.ex. −1, −2, −3. Vi ser dem ofta som <b>temperatur</b> (kallt) eller djup under havet. På en <b>tallinje</b> ligger negativa tal till vänster om 0 och positiva till höger.",
+  ex:["−5 &lt; −2 &lt; 0 &lt; 3. Ju längre till vänster, desto mindre.","Temperatur 2° som sjunker 5° → 2 − 5 = <b>−3°</b>.","Motsatsen (lika långt från 0) till 6 är <b>−6</b>."],
+  miss:["Tro att −10 är större än −2 (fel – −2 är större).","Glömma att räkna åt rätt håll på tallinjen.","Blanda ihop minustecknet för räknesätt och för negativa tal."],
+  tips:["🌡️ Tänk termometer: uppåt = större, nedåt = mindre.","Skillnaden mellan två temperaturer = hoppa längs tallinjen och räkna stegen."],
+  sum:["Negativa tal är mindre än 0.","På tallinjen: vänster = mindre, höger = större.","−2 är större än −10."]},
+ q:{latt:[
+  {t:"tf",q:"−5 är mindre än 0.",correct:true,ex:"Alla negativa tal är mindre än 0. ✔"},
+  {t:"mc",q:"Vilket tal är minst?",opts:["−3","0","2","−1"],correct:0,ex:"<b>−3</b> ligger längst till vänster på tallinjen."},
+  {t:"in",q:"Vad är 0 − 3?",ans:"-3",accept:A("-3","−3"),ex:"0 − 3 = <b>−3</b>."},
+  {t:"in",q:"Temperaturen är 2° och sjunker 5°. Vad blir den nya temperaturen?",ans:"-3",accept:A("-3","−3","-3°"),ex:"2 − 5 = <b>−3°</b>."},
+  {t:"mc",q:"Vilket tal är störst?",opts:["−7","−2","−5","−9"],correct:1,ex:"<b>−2</b> är närmast 0 → störst av de negativa."},
+  {t:"tf",q:"−1 är större än −10.",correct:true,ex:"−1 ligger till höger om −10 → större. ✔"},
+  {t:"in",q:"Vad är −4 + 4?",ans:"0",ex:"−4 + 4 = <b>0</b>."},
+  {t:"in",q:"Vilket tal är motsatsen till 6 (lika långt från 0)?",ans:"-6",accept:A("-6","−6"),ex:"Motsatsen till 6 är <b>−6</b>."},
+  {t:"mc",q:"Vilket tal ligger längst till vänster på tallinjen?",opts:["−5","−2","1","3"],correct:0,ex:"<b>−5</b> är minst → längst till vänster."},
+  {t:"in",q:"Vad är −2 + 5?",ans:"3",ex:"Från −2, gå 5 steg åt höger → <b>3</b>."}
+ ],medel:[
+  {t:"in",q:"−3 + 7 = ?",ans:"4",ex:"Från −3, 7 steg åt höger → <b>4</b>."},
+  {t:"in",q:"4 − 9 = ?",ans:"-5",accept:A("-5","−5"),ex:"Från 4, 9 steg åt vänster → <b>−5</b>."},
+  {t:"in",q:"−5 − 2 = ?",ans:"-7",accept:A("-7","−7"),ex:"Från −5, ytterligare 2 steg åt vänster → <b>−7</b>."},
+  {t:"in",q:"Temperaturen −4° stiger 6°. Ny temperatur?",ans:"2",accept:A("2","2°"),ex:"−4 + 6 = <b>2°</b>."},
+  {t:"in",q:"−8 + 3 = ?",ans:"-5",accept:A("-5","−5"),ex:"Från −8, 3 steg åt höger → <b>−5</b>."},
+  {t:"mc",q:"Vilket tal är näst minst: −2, −5, 1, 0?",opts:["−5","−2","0","1"],correct:1,ex:"Minst är −5, näst minst är <b>−2</b>."},
+  {t:"in",q:"2 − 7 = ?",ans:"-5",accept:A("-5","−5"),ex:"Från 2, 7 steg åt vänster → <b>−5</b>."},
+  {t:"in",q:"−10 + 10 = ?",ans:"0",ex:"−10 + 10 = <b>0</b>."},
+  {t:"in",q:"Hur stor är skillnaden mellan 5° och −3°?",ans:"8",ex:"Från −3 till 5 är det 3 + 5 = <b>8°</b>."},
+  {t:"tf",q:"−6 + 6 = 0.",correct:true,ex:"Ett tal plus sin motsats blir 0. ✔"}
+ ],svar:[
+  {t:"in",q:"−7 + 12 = ?",ans:"5",ex:"Från −7, 12 steg åt höger → <b>5</b>."},
+  {t:"in",q:"−3 − 5 = ?",ans:"-8",accept:A("-8","−8"),ex:"Från −3, 5 steg åt vänster → <b>−8</b>."},
+  {t:"in",q:"Temperaturen var −8° på morgonen och steg 15° till middag. Ny temperatur?",ans:"7",accept:A("7","7°"),ex:"−8 + 15 = <b>7°</b>."},
+  {t:"in",q:"3 − 8 + 2 = ?",ans:"-3",accept:A("-3","−3"),ex:"3 − 8 = −5, sedan −5 + 2 = <b>−3</b>."},
+  {t:"in",q:"Hur stor är skillnaden mellan −12° och 4°?",ans:"16",ex:"Från −12 till 4 är det 12 + 4 = <b>16°</b>."},
+  {t:"in",q:"−5 + 8 − 6 = ?",ans:"-3",accept:A("-3","−3"),ex:"−5 + 8 = 3, sedan 3 − 6 = <b>−3</b>."},
+  {t:"in",q:"En dykare är på −15 m. Han stiger 9 m. Vilket djup är han på nu?",ans:"-6",accept:A("-6","−6"),ex:"−15 + 9 = <b>−6 m</b>."},
+  {t:"in",q:"−20 + 25 − 10 = ?",ans:"-5",accept:A("-5","−5"),ex:"−20 + 25 = 5, sedan 5 − 10 = <b>−5</b>."},
+  {t:"mc",q:"Vilket uttryck ger störst värde?",opts:["−3 + 5","−2 − 1","4 − 9","−6 + 6"],correct:0,ex:"−3+5 = 2, −2−1 = −3, 4−9 = −5, −6+6 = 0. Störst är <b>−3 + 5 = 2</b>."},
+  {t:"in",q:"Hur långt är det mellan −7 och 3 på tallinjen?",ans:"10",ex:"7 + 3 = <b>10</b> steg."}
+ ]}},
+
+{id:"vinklar",grade:6,ic:"📐",name:"Vinklar & former",sub:"Grader och figurer",
+ theory:{
+  intro:"En <b>vinkel</b> mäts i <b>grader (°)</b>. En <b>rät vinkel</b> är 90°, ett <b>halvt varv</b> (rak vinkel) är 180° och ett <b>helt varv</b> är 360°. En vinkel mindre än 90° är <b>spetsig</b>, mellan 90° och 180° är <b>trubbig</b>.",
+  ex:["Vinkelsumman i en <b>triangel</b> är alltid 180°.","Vinkelsumman i en <b>fyrhörning</b> är 360°.","Triangel med 60° och 70° → tredje vinkeln = 180 − 60 − 70 = <b>50°</b>."],
+  miss:["Tro att alla vinklar i en triangel är 90°.","Glömma att triangelns vinklar tillsammans är 180°.","Blanda ihop spetsig och trubbig vinkel."],
+  tips:["📐 Rät vinkel = hörnet på ett papper (90°).","Vinkelsumma triangel = 180°, fyrhörning = 360°."],
+  sum:["Rät = 90°, rak = 180°, helt varv = 360°.","Spetsig &lt; 90° &lt; trubbig &lt; 180°.","Triangel: vinkelsumma 180°. Fyrhörning: 360°."]},
+ q:{latt:[
+  {t:"in",q:"En rät vinkel är hur många grader?",ans:"90",ex:"En rät vinkel = <b>90°</b>."},
+  {t:"mc",q:"Vad kallas en vinkel som är mindre än 90°?",opts:["Spetsig","Trubbig","Rät","Rak"],correct:0,ex:"En vinkel under 90° är <b>spetsig</b>."},
+  {t:"in",q:"Ett helt varv är hur många grader?",ans:"360",ex:"Ett helt varv = <b>360°</b>."},
+  {t:"in",q:"Hur många hörn har en triangel?",ans:"3",ex:"En triangel har <b>3</b> hörn."},
+  {t:"in",q:"Hur många sidor har en kvadrat?",ans:"4",ex:"En kvadrat har <b>4</b> sidor."},
+  {t:"tf",q:"En rak vinkel är 180°.",correct:true,ex:"En rak vinkel (halvt varv) = <b>180°</b>. ✔"},
+  {t:"mc",q:"Vad kallas en vinkel mellan 90° och 180°?",opts:["Spetsig","Rät","Trubbig","Rak"],correct:2,ex:"En vinkel större än 90° men mindre än 180° är <b>trubbig</b>."},
+  {t:"in",q:"Hur många hörn har en rektangel?",ans:"4",ex:"En rektangel har <b>4</b> hörn."},
+  {t:"mc",q:"Hur många sidor har en femhörning?",opts:["4","5","6","3"],correct:1,ex:"En femhörning har <b>5</b> sidor."},
+  {t:"in",q:"Halva ett varv är hur många grader?",ans:"180",ex:"Halva 360° = <b>180°</b>."}
+ ],medel:[
+  {t:"in",q:"Vinklarna i en triangel är tillsammans hur många grader?",ans:"180",ex:"Vinkelsumman i en triangel är alltid <b>180°</b>."},
+  {t:"in",q:"En triangel har vinklarna 60° och 70°. Hur stor är den tredje vinkeln?",ans:"50",ex:"180 − 60 − 70 = <b>50°</b>."},
+  {t:"in",q:"En rät vinkel plus en vinkel på 30°. Hur många grader tillsammans?",ans:"120",ex:"90 + 30 = <b>120°</b>."},
+  {t:"mc",q:"En liksidig triangel har alla vinklar lika. Hur stor är varje vinkel?",opts:["45°","60°","90°","30°"],correct:1,ex:"180 ÷ 3 = <b>60°</b>."},
+  {t:"in",q:"Två vinklar bildar en rak linje (180°). Den ena är 110°. Hur stor är den andra?",ans:"70",ex:"180 − 110 = <b>70°</b>."},
+  {t:"tf",q:"Vinkelsumman i en fyrhörning är 360°.",correct:true,ex:"Ja, alla fyra vinklar är tillsammans <b>360°</b>. ✔"},
+  {t:"in",q:"En triangel har vinklarna 90° och 45°. Hur stor är den tredje?",ans:"45",ex:"180 − 90 − 45 = <b>45°</b>."},
+  {t:"mc",q:"Vad kallas en fyrhörning med fyra räta vinklar och alla sidor lika långa?",opts:["Rektangel","Kvadrat","Romb","Triangel"],correct:1,ex:"Det är en <b>kvadrat</b>."},
+  {t:"in",q:"Hur många grader är 360° − 90°?",ans:"270",ex:"360 − 90 = <b>270°</b>."},
+  {t:"in",q:"En triangel har vinklarna 40°, 60° och x. Hur stor är x?",ans:"80",ex:"180 − 40 − 60 = <b>80°</b>."}
+ ],svar:[
+  {t:"in",q:"En fyrhörning har vinklarna 90°, 90°, 90° och x. Hur stor är x?",ans:"90",ex:"360 − 90 − 90 − 90 = <b>90°</b>."},
+  {t:"in",q:"En triangel har vinklarna 2x, x och 90°. Vad är x?",ans:"30",ex:"2x + x + 90 = 180 → 3x = 90 → x = <b>30°</b>."},
+  {t:"in",q:"Två lika stora vinklar bildar tillsammans 180°. Hur stor är varje?",ans:"90",ex:"180 ÷ 2 = <b>90°</b>."},
+  {t:"in",q:"En likbent triangel har toppvinkeln 40°. Hur stora är de två lika basvinklarna var?",ans:"70",ex:"(180 − 40) ÷ 2 = 140 ÷ 2 = <b>70°</b>."},
+  {t:"in",q:"Två vertikalvinklar (motstående) är lika. Den ena är 65°. Hur stor är den andra?",ans:"65",ex:"Vertikalvinklar är lika stora → <b>65°</b>."},
+  {t:"in",q:"I en fyrhörning är tre vinklar 80°, 100° och 90°. Hur stor är den fjärde?",ans:"90",ex:"360 − 80 − 100 − 90 = <b>90°</b>."},
+  {t:"in",q:"En triangel har vinklarna x, x+10 och x+20. Vad är x?",ans:"50",ex:"x + (x+10) + (x+20) = 180 → 3x + 30 = 180 → 3x = 150 → x = <b>50°</b>."},
+  {t:"in",q:"Klockan visar 3:00. Hur stor är vinkeln mellan visarna?",ans:"90",ex:"Varje timme = 30°. 3 timmar = 3 · 30 = <b>90°</b>."},
+  {t:"in",q:"En rät vinkel delas i två lika delar. Hur stor är varje del?",ans:"45",ex:"90 ÷ 2 = <b>45°</b>."},
+  {t:"mc",q:"Vad är summan av vinklarna i en femhörning?",opts:["360°","540°","720°","180°"],correct:1,ex:"(5 − 2) · 180 = 3 · 180 = <b>540°</b>."}
+ ]}},
+
+{id:"avrundning",grade:6,ic:"🔎",name:"Avrundning & överslag",sub:"Ungefär och avrunda",
+ theory:{
+  intro:"Att <b>avrunda</b> betyder att göra ett tal enklare men nästan lika stort. Man tittar på siffran efter: är den <b>5 eller mer</b> → runda upp, är den <b>4 eller mindre</b> → runda ner. <b>Överslag</b> = räkna ungefär, genom att först avrunda talen.",
+  ex:["47 avrundat till närmaste tiotal → <b>50</b> (7 rundas upp).","23 till närmaste tiotal → <b>20</b> (3 rundas ner).","Överslag: 98 + 103 ≈ 100 + 100 = <b>200</b>."],
+  miss:["Runda åt fel håll (5 ska rundas upp).","Titta på fel siffra vid avrundning.","Glömma nollor: 156 ≈ 200, inte 20."],
+  tips:["🔎 5 eller mer → uppåt. 4 eller mindre → nedåt.","Överslag: avrunda först, räkna sedan i huvudet."],
+  sum:["Avrunda: kolla siffran efter (≥5 upp, ≤4 ner).","Överslag ger ett snabbt ungefärligt svar.","Bra för att kolla om ett svar är rimligt."]},
+ q:{latt:[
+  {t:"in",q:"Avrunda 47 till närmaste tiotal.",ans:"50",ex:"7 ≥ 5 → rundas upp → <b>50</b>."},
+  {t:"in",q:"Avrunda 23 till närmaste tiotal.",ans:"20",ex:"3 ≤ 4 → rundas ner → <b>20</b>."},
+  {t:"in",q:"Avrunda 156 till närmaste hundratal.",ans:"200",ex:"156 ligger närmast <b>200</b>."},
+  {t:"mc",q:"Avrunda 3,7 till närmaste heltal.",opts:["3","4","5","3,5"],correct:1,ex:"7 ≥ 5 → rundas upp → <b>4</b>."},
+  {t:"in",q:"Avrunda 82 till närmaste tiotal.",ans:"80",ex:"2 ≤ 4 → rundas ner → <b>80</b>."},
+  {t:"tf",q:"45 avrundas till 50 (närmaste tiotal).",correct:true,ex:"5 rundas alltid upp → <b>50</b>. ✔"},
+  {t:"in",q:"Avrunda 4,2 till närmaste heltal.",ans:"4",ex:"2 ≤ 4 → rundas ner → <b>4</b>."},
+  {t:"in",q:"Avrunda 199 till närmaste hundratal.",ans:"200",ex:"199 ligger närmast <b>200</b>."},
+  {t:"mc",q:"Överslag: 98 + 103 ≈ ?",opts:["100","200","300","150"],correct:1,ex:"≈ 100 + 100 = <b>200</b>."},
+  {t:"in",q:"Avrunda 6,5 till närmaste heltal.",ans:"7",ex:"5 rundas upp → <b>7</b>."}
+ ],medel:[
+  {t:"in",q:"Avrunda 3,48 till en decimal.",ans:"3,5",accept:A("3,5","3.5"),ex:"Andra decimalen är 8 ≥ 5 → rundas upp → <b>3,5</b>."},
+  {t:"in",q:"Avrunda 2,73 till en decimal.",ans:"2,7",accept:A("2,7","2.7"),ex:"Andra decimalen är 3 ≤ 4 → rundas ner → <b>2,7</b>."},
+  {t:"in",q:"Avrunda 1234 till närmaste hundratal.",ans:"1200",ex:"Tiotalssiffran är 3 ≤ 4 → <b>1200</b>."},
+  {t:"in",q:"Överslag: 41 · 19 ≈ ? (avrunda till 40 · 20)",ans:"800",ex:"40 · 20 = <b>800</b>."},
+  {t:"in",q:"Avrunda 0,86 till en decimal.",ans:"0,9",accept:A("0,9","0.9"),ex:"6 ≥ 5 → rundas upp → <b>0,9</b>."},
+  {t:"mc",q:"Överslag: 612 − 289 ≈ ?",opts:["200","300","400","100"],correct:1,ex:"≈ 600 − 300 = <b>300</b>."},
+  {t:"in",q:"Avrunda 5678 till närmaste tusental.",ans:"6000",ex:"Hundratalssiffran är 6 ≥ 5 → rundas upp → <b>6000</b>."},
+  {t:"in",q:"Avrunda 12,45 till närmaste heltal.",ans:"12",ex:"Första decimalen är 4 ≤ 4 → rundas ner → <b>12</b>."},
+  {t:"in",q:"Överslag: 297 + 405 ≈ ?",ans:"700",ex:"≈ 300 + 400 = <b>700</b>."},
+  {t:"in",q:"Avrunda 9,96 till närmaste heltal.",ans:"10",ex:"9,96 ligger närmast <b>10</b>."}
+ ],svar:[
+  {t:"in",q:"Överslag på 3,9 · 21 (avrunda till 4 · 20). Ungefär?",ans:"80",ex:"4 · 20 = <b>80</b>."},
+  {t:"in",q:"En vara kostar 19,80 kr. Ungefär hur mycket kostar 5 st? (överslag)",ans:"100",ex:"≈ 20 · 5 = <b>100 kr</b>."},
+  {t:"in",q:"Avrunda 2499 till närmaste tusental.",ans:"2000",ex:"Hundratalssiffran är 4 ≤ 4 → rundas ner → <b>2000</b>."},
+  {t:"in",q:"Överslag: 78 · 42 ≈ ? (avrunda till 80 · 40)",ans:"3200",ex:"80 · 40 = <b>3200</b>."},
+  {t:"in",q:"Avrunda 0,048 till två decimaler.",ans:"0,05",accept:A("0,05","0.05"),ex:"Tredje decimalen är 8 ≥ 5 → rundas upp → <b>0,05</b>."},
+  {t:"in",q:"Ungefär hur mycket är 596 ÷ 3? (överslag)",ans:"200",ex:"≈ 600 ÷ 3 = <b>200</b>."},
+  {t:"in",q:"En resa är 487 km + 213 km. Överslag på totalen?",ans:"700",ex:"≈ 500 + 200 = <b>700 km</b>."},
+  {t:"in",q:"Avrunda 149,5 till närmaste heltal.",ans:"150",ex:"5 rundas upp → <b>150</b>."},
+  {t:"in",q:"Överslag: 1998 + 3005 ≈ ?",ans:"5000",ex:"≈ 2000 + 3000 = <b>5000</b>."},
+  {t:"in",q:"4 kg äpplen kostar 39,60 kr. Ungefär pris per kg? (överslag)",ans:"10",ex:"≈ 40 ÷ 4 = <b>10 kr</b>."}
+ ]}},
+
+/* ============ ÅK 7 ============ */
+{id:"ekvationer",grade:7,ic:"⚖️",name:"Ekvationer",sub:"Hitta det okända x",
+ theory:{
+  intro:"En <b>ekvation</b> är två uttryck med ett likhetstecken emellan, t.ex. <span class='eq'>x + 3 = 8</span>. Att <b>lösa</b> ekvationen är att ta reda på vilket värde <b>x</b> har. Tänk på likhetstecknet som en <b>balansvåg</b> – gör du något på ena sidan måste du göra samma på andra.",
+  ex:["<span class='eq'>x + 5 = 12</span> → dra bort 5 på båda sidor → <span class='eq'>x = 7</span>.",
+      "<span class='eq'>2x = 14</span> → dela båda sidor med 2 → <span class='eq'>x = 7</span>.",
+      "<span class='eq'>2x + 3 = 11</span> → −3 → 2x = 8 → ÷2 → <b>x = 4</b>."],
+  miss:["Bara flytta talet till andra sidan utan att byta tecken.",
+        "Glömma göra <b>samma sak på båda sidor</b>.",
+        "Dela bara ena sidan med koefficienten."],
+  tips:["⚖️ Håll vågen i balans: samma operation på båda sidor.",
+        "Kontrollera: sätt in ditt x i ekvationen och se att det stämmer."],
+  sum:["Ekvation = uttryck = uttryck.","Lös genom att göra samma sak på båda sidor.","Kontrollera alltid genom att sätta in svaret."]},
+ q:{latt:[
+  {t:"in",q:"Lös ekvationen: x + 5 = 12. x = ?",ans:"7",ex:"Dra bort 5 på båda sidor: x = 12 − 5 = <b>7</b>."},
+  {t:"in",q:"Lös: x − 3 = 10. x = ?",ans:"13",ex:"Lägg till 3 på båda sidor: x = 10 + 3 = <b>13</b>."},
+  {t:"in",q:"Lös: 2x = 14. x = ?",ans:"7",ex:"Dela båda sidor med 2: x = 14 ÷ 2 = <b>7</b>."},
+  {t:"in",q:"Lös: x/2 = 6. x = ?",ans:"12",ex:"Gånga båda sidor med 2: x = 6 · 2 = <b>12</b>."},
+  {t:"tf",q:"I ekvationen x + 2 = 5 är x = 3.",correct:true,ex:"3 + 2 = 5 stämmer. ✔"},
+  {t:"in",q:"Lös: x + 8 = 20. x = ?",ans:"12",ex:"x = 20 − 8 = <b>12</b>."},
+  {t:"in",q:"Lös: 3x = 21. x = ?",ans:"7",ex:"x = 21 ÷ 3 = <b>7</b>."},
+  {t:"mc",q:"Vad betyder det att 'lösa en ekvation'?",opts:["Rita en graf","Hitta värdet på x","Gånga alla tal","Skriva om till bråk"],correct:1,ex:"Att lösa = hitta vilket värde <b>x</b> har."},
+  {t:"in",q:"Lös: x − 7 = 0. x = ?",ans:"7",ex:"x = 0 + 7 = <b>7</b>."},
+  {t:"in",q:"Lös: 5x = 5. x = ?",ans:"1",ex:"x = 5 ÷ 5 = <b>1</b>."}
+ ],medel:[
+  {t:"in",q:"Lös: 2x + 3 = 11. x = ?",ans:"4",ex:"−3: 2x = 8. ÷2: x = <b>4</b>."},
+  {t:"in",q:"Lös: 3x − 4 = 11. x = ?",ans:"5",ex:"+4: 3x = 15. ÷3: x = <b>5</b>."},
+  {t:"in",q:"Lös: 4x + 2 = 18. x = ?",ans:"4",ex:"−2: 4x = 16. ÷4: x = <b>4</b>."},
+  {t:"in",q:"Lös: x/3 + 1 = 4. x = ?",ans:"9",ex:"−1: x/3 = 3. ·3: x = <b>9</b>."},
+  {t:"in",q:"Lös: 2x + 5 = 5. x = ?",ans:"0",ex:"−5: 2x = 0. ÷2: x = <b>0</b>."},
+  {t:"in",q:"Lös: 5x − 10 = 15. x = ?",ans:"5",ex:"+10: 5x = 25. ÷5: x = <b>5</b>."},
+  {t:"in",q:"Lös: 10 − x = 3. x = ?",ans:"7",ex:"Flytta: 10 − 3 = x → x = <b>7</b>."},
+  {t:"in",q:"Lös: 6x = 42. x = ?",ans:"7",ex:"x = 42 ÷ 6 = <b>7</b>."},
+  {t:"in",q:"Lös: 2(x + 3) = 14. x = ?",ans:"4",ex:"÷2: x + 3 = 7. −3: x = <b>4</b>."},
+  {t:"in",q:"Lös: 3x + x = 20. x = ?",ans:"5",ex:"3x + x = 4x = 20. ÷4: x = <b>5</b>."}
+ ],svar:[
+  {t:"in",q:"Lös: 4x + 3 = 2x + 11. x = ?",ans:"4",ex:"−2x: 2x + 3 = 11. −3: 2x = 8. ÷2: x = <b>4</b>."},
+  {t:"in",q:"Lös: 5x − 2 = 3x + 8. x = ?",ans:"5",ex:"−3x: 2x − 2 = 8. +2: 2x = 10. ÷2: x = <b>5</b>."},
+  {t:"in",q:"Lös: 2(x + 4) = 3x. x = ?",ans:"8",ex:"2x + 8 = 3x. −2x: 8 = x → x = <b>8</b>."},
+  {t:"in",q:"Lolya tänker på ett tal. Hon gångar det med 3 och lägger till 4 – då får hon 19. Vilket är talet?",ans:"5",ex:"3x + 4 = 19. −4: 3x = 15. ÷3: x = <b>5</b>."},
+  {t:"in",q:"Lös: 3(x − 2) = x + 4. x = ?",ans:"5",ex:"3x − 6 = x + 4. −x: 2x − 6 = 4. +6: 2x = 10. x = <b>5</b>."},
+  {t:"in",q:"Lös: 7x − 5 = 4x + 7. x = ?",ans:"4",ex:"−4x: 3x − 5 = 7. +5: 3x = 12. ÷3: x = <b>4</b>."},
+  {t:"in",q:"Två tal. Det ena är 5 större än det andra och summan är 23. Vilket är det <b>mindre</b> talet?",ans:"9",ex:"x + (x + 5) = 23 → 2x + 5 = 23 → 2x = 18 → x = <b>9</b>."},
+  {t:"in",q:"Lös: 4(x − 1) = 2(x + 3). x = ?",ans:"5",ex:"4x − 4 = 2x + 6. −2x: 2x − 4 = 6. +4: 2x = 10. x = <b>5</b>."},
+  {t:"in",q:"Lös: 5x + 2 = 3x + 14. x = ?",ans:"6",ex:"−3x: 2x + 2 = 14. −2: 2x = 12. ÷2: x = <b>6</b>."},
+  {t:"in",q:"Lös: 8 + 2x = 20 − x. x = ?",ans:"4",ex:"+x: 8 + 3x = 20. −8: 3x = 12. ÷3: x = <b>4</b>."}
+ ]}},
+
+{id:"tal7",grade:7,ic:"🔢",name:"Tal & räknesätten",sub:"Decimaler · ·10 ·100",
+ theory:{
+  intro:"I åk 7 räknar vi med <b>decimaltal</b> och tränar på att gånga och dela med 10, 100 och 1000. När du gångar med 10 flyttas <b>decimaltecknet ett steg åt höger</b>; delar du med 10 flyttas det ett steg åt vänster.",
+  ex:["3,5 · 10 = 35 · 100 = 350.","42 ÷ 10 = 4,2 · ÷100 = 0,42.",
+      "Multiplikation med decimal: 0,4 · 6 = 2,4 (tänk 4·6 = 24, ett decimaltecken → 2,4)."],
+  miss:["Flytta decimaltecknet åt fel håll.","Glömma antal decimaler i svaret vid multiplikation.",
+        "Tro att fler decimaler alltid betyder större tal (0,5 > 0,45)."],
+  tips:["·10 → åt höger, ÷10 → åt vänster. Räkna antal nollor = antal steg.",
+        "Kolla rimlighet med överslag först."],
+  sum:["·10/100/1000 flyttar decimaltecknet åt höger.","÷10/100/1000 flyttar det åt vänster.","Antal nollor = antal steg."]},
+ q:{latt:[
+  {t:"in",q:"Räkna ut: 3,5 · 10",ans:"35",ex:"Flytta decimaltecknet ett steg åt höger → <b>35</b>."},
+  {t:"in",q:"Räkna ut: 42 ÷ 10 (svara med decimal)",ans:"4,2",accept:A("4,2","4.2"),ex:"Ett steg åt vänster → <b>4,2</b>."},
+  {t:"in",q:"Räkna ut: 2,4 · 100",ans:"240",ex:"Två steg åt höger → <b>240</b>."},
+  {t:"tf",q:"0,5 är större än 0,45.",correct:true,ex:"0,50 > 0,45. ✔"},
+  {t:"in",q:"Räkna ut: 6,7 + 2,3 (svara med decimal om det behövs)",ans:"9",accept:A("9","9,0","9.0"),ex:"6,7 + 2,3 = <b>9</b>."},
+  {t:"in",q:"Räkna ut: 0,4 · 6",ans:"2,4",accept:A("2,4","2.4"),ex:"4·6 = 24, ett decimaltecken → <b>2,4</b>."},
+  {t:"mc",q:"Vad är 5 ÷ 100?",opts:["0,5","0,05","0,005","50"],correct:1,ex:"Två steg åt vänster → <b>0,05</b>."},
+  {t:"in",q:"Räkna ut: 12,5 · 10",ans:"125",ex:"Ett steg åt höger → <b>125</b>."},
+  {t:"in",q:"Räkna ut: 8,9 − 3,4 (decimal)",ans:"5,5",accept:A("5,5","5.5"),ex:"8,9 − 3,4 = <b>5,5</b>."},
+  {t:"tf",q:"3,5 · 10 = 35.",correct:true,ex:"Decimaltecknet flyttas ett steg åt höger. ✔"}
+ ],medel:[
+  {t:"in",q:"Räkna ut: 0,25 · 100",ans:"25",ex:"Två steg åt höger → <b>25</b>."},
+  {t:"in",q:"Räkna ut: 340 ÷ 100 (decimal)",ans:"3,4",accept:A("3,4","3.4"),ex:"Två steg åt vänster → <b>3,4</b>."},
+  {t:"in",q:"Räkna ut: 1,2 · 1000",ans:"1200",ex:"Tre steg åt höger → <b>1200</b>."},
+  {t:"in",q:"Räkna ut: 0,3 · 0,2 (decimal)",ans:"0,06",accept:A("0,06","0.06"),ex:"3·2 = 6, två decimaler → <b>0,06</b>."},
+  {t:"in",q:"Räkna ut: 7,5 · 4",ans:"30",ex:"7,5 · 4 = <b>30</b>."},
+  {t:"in",q:"Räkna ut: 9 ÷ 1000 (decimal)",ans:"0,009",accept:A("0,009","0.009"),ex:"Tre steg åt vänster → <b>0,009</b>."},
+  {t:"in",q:"Räkna ut: 2,5 + 3,75 (decimal)",ans:"6,25",accept:A("6,25","6.25"),ex:"2,50 + 3,75 = <b>6,25</b>."},
+  {t:"mc",q:"Vilket tal är störst?",opts:["0,7","0,68","0,709","0,7001"],correct:2,ex:"Jämför decimal för decimal: <b>0,709</b> är störst."},
+  {t:"in",q:"Räkna ut: 15 · 0,5",ans:"7,5",accept:A("7,5","7.5"),ex:"0,5 = hälften → 15 ÷ 2 = <b>7,5</b>."},
+  {t:"in",q:"Räkna ut: 4,8 ÷ 4 (decimal)",ans:"1,2",accept:A("1,2","1.2"),ex:"4,8 ÷ 4 = <b>1,2</b>."}
+ ],svar:[
+  {t:"in",q:"Räkna ut: 2,5 · 40",ans:"100",ex:"2,5 · 40 = 2,5 · 4 · 10 = 10 · 10 = <b>100</b>."},
+  {t:"in",q:"Räkna ut: 0,6 · 0,5 (decimal)",ans:"0,3",accept:A("0,3","0.3"),ex:"6·5 = 30, två decimaler → 0,30 = <b>0,3</b>."},
+  {t:"in",q:"Räkna ut: 12,6 ÷ 3 (decimal)",ans:"4,2",accept:A("4,2","4.2"),ex:"12,6 ÷ 3 = <b>4,2</b>."},
+  {t:"in",q:"Räkna ut: 1,25 · 8",ans:"10",ex:"1,25 · 8 = <b>10</b>."},
+  {t:"in",q:"En vara kostar 12,50 kr/st. Vad kostar 6 st?",ans:"75",ex:"12,50 · 6 = <b>75 kr</b>."},
+  {t:"in",q:"Räkna ut: 3,2 · 2,5",ans:"8",ex:"3,2 · 2,5 = 3,2 · 2 + 3,2 · 0,5 = 6,4 + 1,6 = <b>8</b>."},
+  {t:"in",q:"Räkna ut: 45 ÷ 0,5",ans:"90",ex:"Dela med 0,5 = gånga med 2 → 45 · 2 = <b>90</b>."},
+  {t:"in",q:"Räkna ut: 0,125 · 1000",ans:"125",ex:"Tre steg åt höger → <b>125</b>."},
+  {t:"in",q:"3 kg äpplen kostar 59,70 kr. Vad kostar 1 kg? (decimal)",ans:"19,9",accept:A("19,9","19.9","19,90"),ex:"59,70 ÷ 3 = <b>19,90 kr</b>."},
+  {t:"in",q:"Räkna ut: (2,5 + 1,5) · 0,5",ans:"2",ex:"Parentes: 2,5 + 1,5 = 4. 4 · 0,5 = <b>2</b>."}
+ ]}},
+
+{id:"statistik",grade:7,ic:"📊",name:"Statistik",sub:"Medelvärde & median",
+ theory:{
+  intro:"<b>Statistik</b> hjälper oss förstå data. <b>Medelvärde</b> = summan av alla värden delat med antalet värden. <b>Median</b> = det mittersta värdet när talen står i storleksordning. <b>Typvärde</b> = det som förekommer flest gånger.",
+  ex:["Medelvärde av 4, 6, 8: (4+6+8)/3 = 18/3 = <b>6</b>.",
+      "Median av 3, 5, 9: mitten = <b>5</b>. Vid jämnt antal → medelvärdet av de två mittersta.",
+      "Typvärde av 2, 3, 3, 7: <b>3</b> (kommer oftast)."],
+  miss:["Glömma sortera talen innan man tar median.","Dela med fel antal vid medelvärde.",
+        "Blanda ihop median och medelvärde."],
+  tips:["📊 Median: sortera först, ta mitten. Vid jämnt antal – medel av de två i mitten.",
+        "Medelvärde: 'lägg ihop allt, dela på hur många'."],
+  sum:["Medelvärde = summa ÷ antal.","Median = mittvärdet (sortera först).","Typvärde = det vanligaste värdet."]},
+ q:{latt:[
+  {t:"in",q:"Vad är medelvärdet av 4, 6 och 8?",ans:"6",ex:"(4+6+8)/3 = 18/3 = <b>6</b>."},
+  {t:"in",q:"Vad är medianen av 3, 5 och 9?",ans:"5",ex:"Mittersta talet är <b>5</b>."},
+  {t:"mc",q:"Vad betyder medelvärde?",opts:["Det mittersta talet","Summan ÷ antalet","Det vanligaste talet","Det största talet"],correct:1,ex:"Medelvärde = <b>summan delat med antalet</b>."},
+  {t:"in",q:"Vad är typvärdet i 2, 3, 3, 7?",ans:"3",ex:"3 förekommer flest gånger → typvärde <b>3</b>."},
+  {t:"in",q:"Medelvärdet av 10 och 20?",ans:"15",ex:"(10+20)/2 = <b>15</b>."},
+  {t:"tf",q:"Medianen är alltid det största talet.",correct:false,ex:"Nej – medianen är det <b>mittersta</b> talet."},
+  {t:"in",q:"Median av 1, 2, 3, 4, 5?",ans:"3",ex:"Mittersta av fem tal är <b>3</b>."},
+  {t:"in",q:"Medelvärdet av 5, 5 och 5?",ans:"5",ex:"(5+5+5)/3 = <b>5</b>."},
+  {t:"mc",q:"Vilket är typvärdet: 4, 4, 6, 9?",opts:["4","6","9","5"],correct:0,ex:"<b>4</b> kommer oftast."},
+  {t:"in",q:"Medelvärdet av 2, 4, 6, 8?",ans:"5",ex:"(2+4+6+8)/4 = 20/4 = <b>5</b>."}
+ ],medel:[
+  {t:"in",q:"Medelvärdet av 12, 15 och 18?",ans:"15",ex:"(12+15+18)/3 = 45/3 = <b>15</b>."},
+  {t:"in",q:"Median av 7, 2, 9, 4, 5 (sortera först)?",ans:"5",ex:"Sorterat: 2,4,5,7,9 → mitten = <b>5</b>."},
+  {t:"in",q:"Medelvärdet av 3, 7, 8, 2?",ans:"5",ex:"(3+7+8+2)/4 = 20/4 = <b>5</b>."},
+  {t:"in",q:"Median av 4, 8, 6, 2 (jämnt antal)?",ans:"5",ex:"Sorterat: 2,4,6,8 → medel av 4 och 6 = <b>5</b>."},
+  {t:"in",q:"Lolya har provresultaten 8, 10, 6. Vad är medelvärdet?",ans:"8",ex:"(8+10+6)/3 = 24/3 = <b>8</b>."},
+  {t:"tf",q:"Median av 1, 3, 5, 7 är 4.",correct:true,ex:"Medel av de två mittersta (3 och 5) = <b>4</b>. ✔"},
+  {t:"in",q:"Typvärde av 5, 8, 8, 8, 2?",ans:"8",ex:"<b>8</b> förekommer flest gånger."},
+  {t:"in",q:"Medelvärdet av 20, 30, 40, 50?",ans:"35",ex:"(20+30+40+50)/4 = 140/4 = <b>35</b>."},
+  {t:"mc",q:"Fem elever är 150, 152, 148, 155, 150 cm. Typvärde?",opts:["148","150","152","155"],correct:1,ex:"<b>150</b> cm förekommer två gånger."},
+  {t:"in",q:"Median av 10, 20, 30?",ans:"20",ex:"Mitten = <b>20</b>."}
+ ],svar:[
+  {t:"in",q:"Medelvärdet av fyra tal är 10. Tre av talen är 8, 9 och 11. Vad är det fjärde?",ans:"12",ex:"Summan måste vara 4·10 = 40. 8+9+11 = 28. Fjärde = 40 − 28 = <b>12</b>."},
+  {t:"in",q:"Lolyas prov: 12, 15, 18, x. Medelvärdet är 15. Vad är x?",ans:"15",ex:"Summan = 4·15 = 60. 12+15+18 = 45. x = 60 − 45 = <b>15</b>."},
+  {t:"in",q:"Median av 3, 8, 5, 10, 7, 6 (sex tal)?",ans:"6,5",accept:A("6,5","6.5"),ex:"Sorterat: 3,5,6,7,8,10 → medel av 6 och 7 = <b>6,5</b>."},
+  {t:"in",q:"Ett lag gjorde 2, 3, 3, 4 och 8 mål. Vad är medelvärdet?",ans:"4",ex:"(2+3+3+4+8)/5 = 20/5 = <b>4</b>."},
+  {t:"in",q:"I föregående fråga (mål 2,3,3,4,8) – vad är medianen?",ans:"3",ex:"Sorterat: 2,3,3,4,8 → mitten = <b>3</b>."},
+  {t:"in",q:"Medelvärdet av 6 tal är 5. Om ett tal (11) tas bort – vad blir medelvärdet av de 5 som är kvar?",ans:"3,8",accept:A("3,8","3.8"),ex:"Summa = 30. Utan 11 → 19. 19/5 = <b>3,8</b>."},
+  {t:"in",q:"Talen 4, 6, 6, 8, x har medelvärdet 6. Vad är x?",ans:"6",ex:"Summa = 5·6 = 30. 4+6+6+8 = 24. x = <b>6</b>."},
+  {t:"in",q:"Median av 100, 50, 75, 25?",ans:"62,5",accept:A("62,5","62.5"),ex:"Sorterat: 25,50,75,100 → medel av 50 och 75 = <b>62,5</b>."},
+  {t:"in",q:"Fem tal har medelvärdet 20 och median 18. Om alla tal ökar med 5 – vad blir nya medelvärdet?",ans:"25",ex:"Ökar alla med 5 → medelvärdet ökar med 5 → <b>25</b>."},
+  {t:"in",q:"Medelvärdet av 3, 7, 11, 15 och 19?",ans:"11",ex:"Summa = 55. 55/5 = <b>11</b>."}
+ ]}},
+
+{id:"algebra",grade:7,ic:"🔤",name:"Algebra & uttryck",sub:"Räkna med bokstäver",
+ theory:{
+  intro:"I <b>algebra</b> använder vi <b>variabler</b> – bokstäver som står för ett tal, t.ex. <b>x</b>. Ett <b>uttryck</b> som 3x + 2 kan vi förenkla och beräkna. <b>4x</b> betyder 4 · x. Termer med samma bokstav kan slås ihop: <b>3x + 2x = 5x</b>.",
+  ex:["Förenkla: 3x + 2x = <b>5x</b> (lägg ihop termer med samma bokstav).","Beräkna 2x när x = 3 → 2 · 3 = <b>6</b>.","Förenkla: 4x + 3 + 2x = <b>6x + 3</b> (x-termer för sig, tal för sig)."],
+  miss:["Slå ihop olika bokstäver: 2x + 3y ≠ 5xy.","Slå ihop x-termer med vanliga tal: 3x + 2 ≠ 5x.","Glömma att 4x betyder 4 · x."],
+  tips:["🔤 Samla 'äpplen med äpplen': bara termer med <b>samma</b> bokstav slås ihop.","Sätt in värdet på x sist när du ska beräkna."],
+  sum:["Variabel = bokstav för ett tal.","Slå bara ihop termer med samma bokstav.","4x = 4 · x. Beräkna genom att sätta in x."]},
+ q:{latt:[
+  {t:"in",q:"Förenkla: x + x",ans:"2x",accept:A("2x"),ex:"x + x = <b>2x</b>."},
+  {t:"in",q:"Förenkla: 3x + 2x",ans:"5x",accept:A("5x"),ex:"3x + 2x = <b>5x</b>."},
+  {t:"mc",q:"Vad är en variabel?",opts:["En bokstav som står för ett tal","Ett räknesätt","En parentes","Ett bråk"],correct:0,ex:"En variabel är <b>en bokstav som står för ett tal</b>."},
+  {t:"in",q:"Beräkna 2x när x = 3.",ans:"6",ex:"2 · 3 = <b>6</b>."},
+  {t:"in",q:"Förenkla: 5a − 2a",ans:"3a",accept:A("3a"),ex:"5a − 2a = <b>3a</b>."},
+  {t:"in",q:"Beräkna x + 4 när x = 5.",ans:"9",ex:"5 + 4 = <b>9</b>."},
+  {t:"tf",q:"4x betyder 4 gånger x.",correct:true,ex:"Ja, 4x = 4 · x. ✔"},
+  {t:"in",q:"Förenkla: 2x + 3x + x",ans:"6x",accept:A("6x"),ex:"2x + 3x + x = <b>6x</b>."},
+  {t:"in",q:"Beräkna 3x när x = 4.",ans:"12",ex:"3 · 4 = <b>12</b>."},
+  {t:"mc",q:"Vilket av dessa är ett uttryck?",opts:["x + 5","x = 5","5 < 3","2 · 3 = 6"],correct:0,ex:"<b>x + 5</b> är ett uttryck (inget likhetstecken)."}
+ ],medel:[
+  {t:"in",q:"Förenkla: 4x + 3 + 2x",ans:"6x+3",accept:A("6x+3","3+6x"),ex:"x-termer: 4x + 2x = 6x. Kvar: <b>6x + 3</b>."},
+  {t:"in",q:"Beräkna 2x + 1 när x = 5.",ans:"11",ex:"2 · 5 + 1 = 10 + 1 = <b>11</b>."},
+  {t:"in",q:"Förenkla: 5x − x + 2",ans:"4x+2",accept:A("4x+2","2+4x"),ex:"5x − x = 4x. Kvar: <b>4x + 2</b>."},
+  {t:"in",q:"Skriv ett uttryck för 'ett tal x ökat med 7'.",ans:"x+7",accept:A("x+7","7+x"),ex:"Ökat med 7 → <b>x + 7</b>."},
+  {t:"in",q:"Beräkna 3(x + 2) när x = 4.",ans:"18",ex:"3 · (4 + 2) = 3 · 6 = <b>18</b>."},
+  {t:"in",q:"Förenkla: 2a + 3b + a",ans:"3a+3b",accept:A("3a+3b","3b+3a"),ex:"a-termer: 2a + a = 3a. Kvar: <b>3a + 3b</b>."},
+  {t:"in",q:"Beräkna 5x − 3 när x = 2.",ans:"7",ex:"5 · 2 − 3 = 10 − 3 = <b>7</b>."},
+  {t:"in",q:"En påse kostar x kr. Vad kostar 4 påsar? (uttryck)",ans:"4x",accept:A("4x"),ex:"4 påsar → <b>4x</b> kr."},
+  {t:"in",q:"Förenkla: 7y − 2y − y",ans:"4y",accept:A("4y"),ex:"7y − 2y − y = <b>4y</b>."},
+  {t:"in",q:"Beräkna x² när x = 3.",ans:"9",ex:"3² = 3 · 3 = <b>9</b>."}
+ ],svar:[
+  {t:"in",q:"Förenkla: 3(x + 2) + 2x",ans:"5x+6",accept:A("5x+6","6+5x"),ex:"3(x+2) = 3x + 6. Plus 2x → <b>5x + 6</b>."},
+  {t:"in",q:"Beräkna 2x + 3y när x = 4 och y = 2.",ans:"14",ex:"2 · 4 + 3 · 2 = 8 + 6 = <b>14</b>."},
+  {t:"in",q:"Förenkla: 4(2x − 1)",ans:"8x-4",accept:A("8x-4"),ex:"Gånga in: 4 · 2x − 4 · 1 = <b>8x − 4</b>."},
+  {t:"in",q:"Lolya är x år. Hennes bror är 3 år äldre. Uttryck för broderns ålder?",ans:"x+3",accept:A("x+3","3+x"),ex:"3 år äldre → <b>x + 3</b>."},
+  {t:"in",q:"Beräkna 2(x + 3) − x när x = 5.",ans:"11",ex:"2 · (5+3) − 5 = 16 − 5 = <b>11</b>."},
+  {t:"in",q:"Förenkla: 5x + 2 − 3x + 4",ans:"2x+6",accept:A("2x+6","6+2x"),ex:"x-termer: 5x − 3x = 2x. Tal: 2 + 4 = 6. → <b>2x + 6</b>."},
+  {t:"in",q:"En rektangel har sidorna x och 3. Skriv ett uttryck för omkretsen.",ans:"2x+6",accept:A("2x+6","6+2x","2(x+3)"),ex:"Omkrets = 2 · (x + 3) = <b>2x + 6</b>."},
+  {t:"in",q:"Beräkna 3x² när x = 2.",ans:"12",ex:"3 · 2² = 3 · 4 = <b>12</b>."},
+  {t:"in",q:"Förenkla: 2(x + 4) + 3(x − 1)",ans:"5x+5",accept:A("5x+5","5+5x"),ex:"2x + 8 + 3x − 3 = <b>5x + 5</b>."},
+  {t:"in",q:"Ett tal är x. Det tredubblas och minskas med 2. Uttryck?",ans:"3x-2",accept:A("3x-2"),ex:"Tredubbla → 3x, minska med 2 → <b>3x − 2</b>."}
+ ]}},
+
+{id:"skala",grade:7,ic:"🗺️",name:"Skala",sub:"Kartor och ritningar",
+ theory:{
+  intro:"<b>Skala</b> visar förhållandet mellan en bild/karta och verkligheten. Skala <b>1:100</b> betyder att 1 cm på ritningen är 100 cm i verkligheten. Är första talet mindre → <b>förminskning</b>. Är det större (t.ex. 2:1) → <b>förstoring</b>.",
+  ex:["Skala 1:100. 3 cm på ritningen = 3 · 100 = <b>300 cm</b> i verkligheten.","Verklig längd → ritning: dela. 800 cm i skala 1:100 → 800 ÷ 100 = <b>8 cm</b>.","Skala 2:1 (förstoring): verklig 3 cm ritas som <b>6 cm</b>."],
+  miss:["Gånga när man ska dela (verklighet → ritning).","Glömma att räkna om till samma enhet (cm/m).","Blanda ihop förstoring och förminskning."],
+  tips:["🗺️ Ritning → verklighet: <b>gånga</b> med skaltalet. Verklighet → ritning: <b>dela</b>.","100 cm = 1 m: ha koll på enheterna."],
+  sum:["Skala 1:100 → 1 cm bild = 100 cm verklighet.","Ritning → verklighet: gånga. Tvärtom: dela.","1:x = förminskning, x:1 = förstoring."]},
+ q:{latt:[
+  {t:"mc",q:"Skala 1:100. Hur mycket i verkligheten är 1 cm på ritningen?",opts:["100 cm","10 cm","1 cm","1000 cm"],correct:0,ex:"1 cm på ritningen = <b>100 cm</b> i verkligheten."},
+  {t:"tf",q:"Skala 1:2 är en förminskning.",correct:true,ex:"Ritningen är mindre än verkligheten → <b>förminskning</b>. ✔"},
+  {t:"in",q:"Skala 1:50. 2 cm på kartan = ? cm i verkligheten",ans:"100",ex:"2 · 50 = <b>100 cm</b>."},
+  {t:"mc",q:"Skala 2:1 är en …",opts:["Förminskning","Förstoring","Samma storlek","Karta"],correct:1,ex:"Bilden är större än verkligheten → <b>förstoring</b>."},
+  {t:"in",q:"Skala 1:100. 3 cm på ritningen = ? cm i verkligheten",ans:"300",ex:"3 · 100 = <b>300 cm</b>."},
+  {t:"tf",q:"I skala 1:1 är bilden lika stor som verkligheten.",correct:true,ex:"1:1 = samma storlek. ✔"},
+  {t:"in",q:"Skala 1:10. 5 cm på ritningen = ? cm i verkligheten",ans:"50",ex:"5 · 10 = <b>50 cm</b>."},
+  {t:"mc",q:"Skala 1:1000 betyder att 1 cm på kartan är …",opts:["1 cm","10 cm","1000 cm","100 cm"],correct:2,ex:"1 cm = <b>1000 cm</b> i verkligheten."},
+  {t:"in",q:"Skala 1:20. 4 cm på ritningen = ? cm i verkligheten",ans:"80",ex:"4 · 20 = <b>80 cm</b>."},
+  {t:"in",q:"Skala 1:100. 1 cm på ritningen = ? m i verkligheten",ans:"1",ex:"1 · 100 = 100 cm = <b>1 m</b>."}
+ ],medel:[
+  {t:"in",q:"Skala 1:200. 3 cm på ritningen = ? cm i verkligheten",ans:"600",ex:"3 · 200 = <b>600 cm</b>."},
+  {t:"in",q:"Skala 1:100. Ett hus är 8 m brett. Hur många cm blir det på ritningen?",ans:"8",ex:"8 m = 800 cm. 800 ÷ 100 = <b>8 cm</b>."},
+  {t:"in",q:"Skala 1:50. Verklig längd 250 cm = ? cm på ritningen",ans:"5",ex:"250 ÷ 50 = <b>5 cm</b>."},
+  {t:"in",q:"Skala 1:1000. 4 cm på kartan = ? m i verkligheten",ans:"40",ex:"4 · 1000 = 4000 cm = <b>40 m</b>."},
+  {t:"mc",q:"Skala 1:2. En sak som är 6 cm ritas som …",opts:["12 cm","3 cm","6 cm","2 cm"],correct:1,ex:"6 ÷ 2 = <b>3 cm</b>."},
+  {t:"in",q:"Skala 2:1 (förstoring). En verklig längd på 3 cm ritas som ? cm",ans:"6",ex:"3 · 2 = <b>6 cm</b>."},
+  {t:"in",q:"Skala 1:500. 2 cm på kartan = ? m i verkligheten",ans:"10",ex:"2 · 500 = 1000 cm = <b>10 m</b>."},
+  {t:"in",q:"Skala 1:100. En verklig längd på 4,5 m = ? cm på ritningen",ans:"4,5",accept:A("4,5","4.5"),ex:"4,5 m = 450 cm. 450 ÷ 100 = <b>4,5 cm</b>."},
+  {t:"in",q:"En modellbil har skala 1:20. Riktiga bilen är 4 m lång. Hur lång är modellen i cm?",ans:"20",ex:"4 m = 400 cm. 400 ÷ 20 = <b>20 cm</b>."},
+  {t:"in",q:"Skala 1:250. 4 cm på ritningen = ? cm i verkligheten",ans:"1000",ex:"4 · 250 = <b>1000 cm</b>."}
+ ],svar:[
+  {t:"in",q:"Skala 1:100. Avståndet på kartan är 6,5 cm. Verkligt avstånd i m?",ans:"6,5",accept:A("6,5","6.5"),ex:"6,5 · 100 = 650 cm = <b>6,5 m</b>."},
+  {t:"in",q:"Skala 1:50000. 4 cm på kartan = ? km i verkligheten",ans:"2",ex:"4 · 50000 = 200000 cm = 2000 m = <b>2 km</b>."},
+  {t:"in",q:"En ritning i skala 1:20 visar en dörr som 10 cm. Verklig höjd i m?",ans:"2",ex:"10 · 20 = 200 cm = <b>2 m</b>."},
+  {t:"in",q:"Skala 1:25000. Verkligt avstånd 5 km. Hur långt blir det på kartan i cm?",ans:"20",ex:"5 km = 500000 cm. 500000 ÷ 25000 = <b>20 cm</b>."},
+  {t:"in",q:"Skala 2:1. En insekt ritas 8 cm. Hur stor är den i verkligheten (cm)?",ans:"4",ex:"8 ÷ 2 = <b>4 cm</b>."},
+  {t:"in",q:"Skala 1:150. 6 cm på ritningen = ? m i verkligheten",ans:"9",ex:"6 · 150 = 900 cm = <b>9 m</b>."},
+  {t:"in",q:"En karta har skala 1:100000. 3,5 cm = ? km i verkligheten",ans:"3,5",accept:A("3,5","3.5"),ex:"3,5 · 100000 = 350000 cm = 3500 m = <b>3,5 km</b>."},
+  {t:"in",q:"En modell har skala 1:48. Modellen är 25 cm. Verklig längd i cm?",ans:"1200",ex:"25 · 48 = <b>1200 cm</b>."},
+  {t:"in",q:"Skala 1:100. Ett rum är 5 m × 4 m. Vad blir ritningens area i cm²?",ans:"20",ex:"Sidorna blir 5 cm och 4 cm. Area = 5 · 4 = <b>20 cm²</b>."},
+  {t:"in",q:"Skala 1:200. 8 cm på ritningen = ? m i verkligheten",ans:"16",ex:"8 · 200 = 1600 cm = <b>16 m</b>."}
+ ]}},
+
+{id:"sannolikhet",grade:7,ic:"🎲",name:"Sannolikhet",sub:"Chansen att något händer",
+ theory:{
+  intro:"<b>Sannolikhet</b> är ett mått på hur troligt något är. Den är alltid ett tal mellan <b>0</b> (omöjligt) och <b>1</b> (säkert). Sannolikhet = <b>gynnsamma utfall ÷ alla möjliga utfall</b>. Vi kan skriva den som bråk, decimaltal eller procent.",
+  ex:["Myntkast: P(krona) = 1/2 (ett gynnsamt av två möjliga).","Tärning: P(en 3:a) = 1/6.","Tärning: P(jämnt tal) = 3/6 = <b>1/2</b> (2, 4, 6 är gynnsamma)."],
+  miss:["Glömma att räkna ALLA möjliga utfall i nämnaren.","Ge ett svar större än 1 (går inte).","Blanda ihop 'gynnsamma' och 'ogynnsamma' utfall."],
+  tips:["🎲 P = det du vill ha ÷ allt som kan hända.","P(inte A) = 1 − P(A)."],
+  sum:["Sannolikhet ligger mellan 0 och 1.","P = gynnsamma ÷ alla möjliga utfall.","0 = omöjligt, 1 = säkert."]},
+ q:{latt:[
+  {t:"mc",q:"Sannolikheten anges oftast som …",opts:["Ett tal mellan 0 och 1","Ett negativt tal","Ett tal större än 1","Alltid 100"],correct:0,ex:"Sannolikhet är <b>ett tal mellan 0 och 1</b>."},
+  {t:"in",q:"Sannolikheten att få krona vid ett myntkast? (bråk)",ans:"1/2",accept:A("1/2","0,5","0.5"),ex:"1 gynnsamt av 2 möjliga → <b>1/2</b>."},
+  {t:"in",q:"En tärning har 6 sidor. Sannolikheten att få en 3:a? (bråk)",ans:"1/6",accept:A("1/6"),ex:"1 gynnsamt av 6 → <b>1/6</b>."},
+  {t:"tf",q:"Sannolikheten 0 betyder att något är omöjligt.",correct:true,ex:"P = 0 → omöjligt. ✔"},
+  {t:"mc",q:"Sannolikheten 1 betyder att något är …",opts:["Säkert","Omöjligt","Hälften","Osäkert"],correct:0,ex:"P = 1 → <b>säkert</b>."},
+  {t:"in",q:"Sannolikheten att slå ett jämnt tal på en tärning? (enklaste bråkform)",ans:"1/2",accept:A("1/2","3/6"),ex:"Jämna: 2, 4, 6 → 3/6 = <b>1/2</b>."},
+  {t:"in",q:"En påse har 2 röda och 2 blå kulor. P(röd)? (enklaste bråk)",ans:"1/2",accept:A("1/2","2/4"),ex:"2 röda av 4 → 2/4 = <b>1/2</b>."},
+  {t:"mc",q:"Vilken händelse är säkrast?",opts:["P = 0,9","P = 0,5","P = 0,1","P = 0"],correct:0,ex:"Högst sannolikhet är säkrast → <b>0,9</b>."},
+  {t:"in",q:"En vanlig tärning. Sannolikheten att få en 7:a?",ans:"0",ex:"En 7:a finns inte → <b>0</b> (omöjligt)."},
+  {t:"in",q:"Sex lika stora tårtbitar, en är choklad. P(choklad)? (bråk)",ans:"1/6",accept:A("1/6"),ex:"1 av 6 → <b>1/6</b>."}
+ ],medel:[
+  {t:"in",q:"En tärning. P(få minst 5, alltså 5 eller 6)? (enklaste bråk)",ans:"1/3",accept:A("1/3","2/6"),ex:"2 gynnsamma (5, 6) av 6 → 2/6 = <b>1/3</b>."},
+  {t:"in",q:"Påse: 3 gröna och 2 gula kulor. P(grön)? (bråk)",ans:"3/5",accept:A("3/5"),ex:"3 gröna av 5 → <b>3/5</b>."},
+  {t:"in",q:"10 kort, 4 är röda. P(röd)? (enklaste bråk)",ans:"2/5",accept:A("2/5","4/10"),ex:"4 av 10 → 4/10 = <b>2/5</b>."},
+  {t:"in",q:"P(ojämnt tal på en tärning)? (enklaste bråk)",ans:"1/2",accept:A("1/2","3/6"),ex:"Ojämna: 1, 3, 5 → 3/6 = <b>1/2</b>."},
+  {t:"mc",q:"P(krona) vid myntkast i procent?",opts:["25 %","50 %","75 %","100 %"],correct:1,ex:"1/2 = <b>50 %</b>."},
+  {t:"in",q:"20 lotter, 4 är vinster. P(vinst)? (enklaste bråk)",ans:"1/5",accept:A("1/5","4/20"),ex:"4 av 20 → 4/20 = <b>1/5</b>."},
+  {t:"in",q:"En tärning. P(få 1, 2 eller 3)? (enklaste bråk)",ans:"1/2",accept:A("1/2","3/6"),ex:"3 gynnsamma av 6 → 3/6 = <b>1/2</b>."},
+  {t:"in",q:"En påse med 5 kulor, 1 är röd. P(INTE röd)? (bråk)",ans:"4/5",accept:A("4/5"),ex:"4 av 5 är inte röda → <b>4/5</b>."},
+  {t:"in",q:"P(få en 6:a två gånger i rad med en tärning)? (bråk)",ans:"1/36",accept:A("1/36"),ex:"1/6 · 1/6 = <b>1/36</b>."},
+  {t:"in",q:"8 bollar, 3 är vita. P(vit) i procent?",ans:"37,5",accept:A("37,5","37.5"),ex:"3/8 = 0,375 = <b>37,5 %</b>."}
+ ],svar:[
+  {t:"in",q:"Två mynt kastas. P(två kronor)? (bråk)",ans:"1/4",accept:A("1/4"),ex:"1/2 · 1/2 = <b>1/4</b>."},
+  {t:"in",q:"Påse: 6 röda och 4 blå kulor. P(blå) i procent?",ans:"40",ex:"4/10 = 0,4 = <b>40 %</b>."},
+  {t:"in",q:"En tärning. P(inte en 6:a)? (enklaste bråk)",ans:"5/6",accept:A("5/6"),ex:"P(6:a) = 1/6, så P(inte 6:a) = 1 − 1/6 = <b>5/6</b>."},
+  {t:"in",q:"25 lotter, 5 är vinster. P(vinst) i procent?",ans:"20",ex:"5/25 = 0,2 = <b>20 %</b>."},
+  {t:"in",q:"Två tärningar. P(båda visar 1)? (bråk)",ans:"1/36",accept:A("1/36"),ex:"1/6 · 1/6 = <b>1/36</b>."},
+  {t:"in",q:"Påse: 4 röda, 6 blå. Du tar en röd och behåller den. Vad är P(röd) av de 9 som är kvar? (enklaste bråk)",ans:"1/3",accept:A("1/3","3/9"),ex:"Nu 3 röda av 9 → 3/9 = <b>1/3</b>."},
+  {t:"in",q:"En tärning. P(få ett tal större än 4)? (enklaste bråk)",ans:"1/3",accept:A("1/3","2/6"),ex:"Större än 4 = 5 och 6 → 2/6 = <b>1/3</b>."},
+  {t:"in",q:"50 personer, 30 gillar glass. En väljs slumpvis. P(gillar glass) i procent?",ans:"60",ex:"30/50 = 0,6 = <b>60 %</b>."},
+  {t:"in",q:"En snurra har 8 lika fält, 2 är röda. P(röd) i procent?",ans:"25",ex:"2/8 = 0,25 = <b>25 %</b>."},
+  {t:"in",q:"Två mynt kastas. P(minst en krona)? (bråk)",ans:"3/4",accept:A("3/4"),ex:"Utfall: KK, KG, GK, GG. Tre har minst en krona → <b>3/4</b>."}
+ ]}},
+
+{id:"koordinater",grade:7,ic:"📈",name:"Koordinatsystem",sub:"Punkter & proportionalitet",
+ theory:{
+  intro:"Ett <b>koordinatsystem</b> har en vågrät <b>x-axel</b> och en lodrät <b>y-axel</b>. En punkt skrivs (x, y) – <b>x först</b>. Punkten (0, 0) heter <b>origo</b>. När y = k · x är sambandet <b>proportionellt</b> och grafen blir en rät linje genom origo.",
+  ex:["Punkten (3, 2): 3 steg åt höger, 2 steg upp.","y = 2x: när x = 3 → y = 2 · 3 = <b>6</b>.","Proportionellt: 1 kg äpplen kostar 20 kr → 4 kg kostar 4 · 20 = <b>80 kr</b>."],
+  miss:["Skriva koordinaterna i fel ordning (x ska vara först).","Glömma att en proportionell graf går genom origo.","Räkna fel steg på axlarna."],
+  tips:["📈 (x, y): 'in i huset (x) och upp för trappan (y)'.","Proportionellt: dubbelt så mycket av det ena → dubbelt av det andra."],
+  sum:["Punkt skrivs (x, y), x först.","Origo = (0, 0).","y = k·x är proportionellt → rät linje genom origo."]},
+ q:{latt:[
+  {t:"mc",q:"I koordinaten (3, 2), vilket är x-koordinaten?",opts:["3","2","5","0"],correct:0,ex:"x skrivs först → x = <b>3</b>."},
+  {t:"mc",q:"Punkten (0, 0) kallas …",opts:["Origo","x-axeln","Kvadrant","Toppen"],correct:0,ex:"(0, 0) heter <b>origo</b>."},
+  {t:"in",q:"I punkten (5, 4), vad är y-koordinaten?",ans:"4",ex:"y skrivs sist → y = <b>4</b>."},
+  {t:"tf",q:"x-koordinaten skrivs alltid först.",correct:true,ex:"Ja, formen är (x, y). ✔"},
+  {t:"mc",q:"Punkten (4, 0) ligger på …",opts:["x-axeln","y-axeln","mitten av rutan","utanför"],correct:0,ex:"y = 0 → punkten ligger på <b>x-axeln</b>."},
+  {t:"in",q:"Om y = 2x, vad är y när x = 3?",ans:"6",ex:"2 · 3 = <b>6</b>."},
+  {t:"mc",q:"För att nå punkten (2, 5) från origo går du …",opts:["2 höger, 5 upp","5 höger, 2 upp","2 upp, 5 höger","2 vänster, 5 ner"],correct:0,ex:"x = 2 (höger), y = 5 (upp) → <b>2 höger, 5 upp</b>."},
+  {t:"in",q:"Om y = x + 1, vad är y när x = 4?",ans:"5",ex:"4 + 1 = <b>5</b>."},
+  {t:"tf",q:"Origo har koordinaterna (0, 0).",correct:true,ex:"Ja, det är där axlarna möts. ✔"},
+  {t:"in",q:"Om y = 3x, vad är y när x = 2?",ans:"6",ex:"3 · 2 = <b>6</b>."}
+ ],medel:[
+  {t:"in",q:"y = 2x. Vad är y när x = 5?",ans:"10",ex:"2 · 5 = <b>10</b>."},
+  {t:"in",q:"y = x + 3. Vad är y när x = 7?",ans:"10",ex:"7 + 3 = <b>10</b>."},
+  {t:"in",q:"En bil kör 60 km/h. Hur långt kör den på 3 timmar?",ans:"180",ex:"60 · 3 = <b>180 km</b>."},
+  {t:"in",q:"1 kg äpplen kostar 20 kr. Vad kostar 4 kg?",ans:"80",ex:"20 · 4 = <b>80 kr</b>."},
+  {t:"mc",q:"Ett proportionellt samband ger en graf som är …",opts:["En rät linje genom origo","En kurva","En cirkel","En prick"],correct:0,ex:"y = k·x ger <b>en rät linje genom origo</b>."},
+  {t:"in",q:"y = 4x. Vad är x när y = 20?",ans:"5",ex:"20 ÷ 4 = <b>5</b>."},
+  {t:"in",q:"3 pennor kostar 15 kr. Vad kostar 1 penna?",ans:"5",ex:"15 ÷ 3 = <b>5 kr</b>."},
+  {t:"in",q:"y = 2x + 1. Vad är y när x = 3?",ans:"7",ex:"2 · 3 + 1 = 6 + 1 = <b>7</b>."},
+  {t:"in",q:"En kran fyller 5 liter per minut. Hur många liter på 6 minuter?",ans:"30",ex:"5 · 6 = <b>30 liter</b>."},
+  {t:"in",q:"2 m tyg kostar 50 kr. Vad kostar 6 m?",ans:"150",ex:"1 m = 25 kr. 25 · 6 = <b>150 kr</b>."}
+ ],svar:[
+  {t:"in",q:"y = 3x − 2. Vad är y när x = 4?",ans:"10",ex:"3 · 4 − 2 = 12 − 2 = <b>10</b>."},
+  {t:"in",q:"En taxi: 40 kr i startavgift + 15 kr/km. Vad kostar en resa på 5 km?",ans:"115",ex:"40 + 15 · 5 = 40 + 75 = <b>115 kr</b>."},
+  {t:"in",q:"y = 5x. Vad är x när y = 45?",ans:"9",ex:"45 ÷ 5 = <b>9</b>."},
+  {t:"in",q:"Ett recept använder 250 g mjöl per kaka. Hur många g behövs till 6 kakor?",ans:"1500",ex:"250 · 6 = <b>1500 g</b>."},
+  {t:"in",q:"En cyklist kör 24 km på 2 timmar i jämn fart. Hur långt kör hon på 5 timmar?",ans:"60",ex:"Fart = 24 ÷ 2 = 12 km/h. 12 · 5 = <b>60 km</b>."},
+  {t:"in",q:"y = 2x + 3. Vad är x när y = 15?",ans:"6",ex:"2x = 15 − 3 = 12 → x = <b>6</b>."},
+  {t:"in",q:"4 arbetare bygger ett staket på 6 dagar. Hur många dagar tar det för 8 arbetare (dubbelt så många)?",ans:"3",ex:"Dubbelt så många → halva tiden. 6 ÷ 2 = <b>3 dagar</b>."},
+  {t:"in",q:"En mobil laddar 20 % på 15 minuter. Hur många minuter tar det till 100 %?",ans:"75",ex:"100 ÷ 20 = 5 steg. 5 · 15 = <b>75 min</b>."},
+  {t:"in",q:"Punkterna (0,0), (1,3) och (2,6) ligger på linjen y = ?x",ans:"3",ex:"y ökar med 3 för varje steg i x → y = <b>3</b>x."},
+  {t:"in",q:"3 liter färg räcker till 12 m². Hur många m² räcker 5 liter till?",ans:"20",ex:"1 liter räcker till 12 ÷ 3 = 4 m². 4 · 5 = <b>20 m²</b>."}
+ ]}}
+];
+
+/* Mixed exam */
+const EXAM=[
+ {p:1,t:"in",q:"Räkna ut: 3/8 + 3/8 (svara som bråk)",ans:"6/8",accept:A("6/8","3/4"),ex:"Samma nämnare: 3+3 = 6 → <b>6/8</b> (= 3/4)."},
+ {p:1,t:"in",q:"Hur mycket är 25 % av 160?",ans:"40",ex:"160 ÷ 4 = <b>40</b>."},
+ {p:1,t:"mc",q:"Skriv 3/4 i decimalform.",opts:["0,34","0,43","0,75","0,25"],correct:2,ex:"3 ÷ 4 = <b>0,75</b>."},
+ {p:2,t:"in",q:"En rektangel är 9 cm × 6 cm. Area i cm²?",ans:"54",ex:"9 · 6 = <b>54 cm²</b>."},
+ {p:2,t:"in",q:"Lös ekvationen: 3x + 2 = 17. x = ?",ans:"5",ex:"−2: 3x = 15. ÷3: x = <b>5</b>."},
+ {p:2,t:"in",q:"Vad är medelvärdet av 7, 9, 8, 12?",ans:"9",ex:"(7+9+8+12)/4 = 36/4 = <b>9</b>."},
+ {p:2,t:"in",q:"Räkna ut: 2,5 · 100",ans:"250",ex:"Två steg åt höger → <b>250</b>."},
+ {p:3,t:"in",q:"En tröja kostar 250 kr och sänks med 20 %. Nytt pris i kr?",ans:"200",ex:"20 % av 250 = 50. 250 − 50 = <b>200 kr</b>."},
+ {p:3,t:"in",q:"En triangel har area 24 cm² och bas 8 cm. Höjd i cm?",ans:"6",ex:"24 = 8·höjd/2 → höjd = 48 ÷ 8 = <b>6 cm</b>."},
+ {p:3,t:"in",q:"Lös: 5x − 3 = 2x + 9. x = ?",ans:"4",ex:"−2x: 3x − 3 = 9. +3: 3x = 12. x = <b>4</b>."},
+ {p:3,t:"in",q:"Lolya köper 3 böcker för 89 kr/st och betalar med 300 kr. Hur mycket får hon tillbaka i kr?",ans:"33",ex:"3 · 89 = 267. 300 − 267 = <b>33 kr</b>."},
+ {p:4,t:"in",q:"2/3 av eleverna i en klass på 30 spelar fotboll. Hur många spelar INTE fotboll?",ans:"10",ex:"2/3 av 30 = 20 spelar. Kvar: 30 − 20 = <b>10</b>."}
+];
+const EXAM_MAX=EXAM.reduce((s,q)=>s+q.p,0);
+
+/* ---------- STATE ---------- */
+let S={grade:6,topic:null,queue:[],idx:0,correct:0,total:0,mode:"menu",exam:[],examScored:false};
+const chat=document.getElementById("chat");
+const panel=document.getElementById("panel");
+const $=(s)=>document.querySelector(s);
+const scoreEl=$("#score"),totalEl=$("#total");
+
+/* ---------- helpers ---------- */
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function botMsg(html,cls=""){
+  const m=document.createElement("div");m.className="msg";
+  m.innerHTML=`<div class="avatar">🦉</div><div class="bubble ${cls}">${html}</div>`;
+  chat.appendChild(m);scrollDown();return m;
+}
+function meMsg(text){
+  const m=document.createElement("div");m.className="msg me";
+  m.innerHTML=`<div class="avatar">🙋‍♀️</div><div class="bubble">${esc(text)}</div>`;
+  chat.appendChild(m);scrollDown();
+}
+function scrollDown(){requestAnimationFrame(()=>window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"}));}
+function setPanel(html){panel.innerHTML=html;}
+function norm(s){return String(s).trim().toLowerCase().replace(/\s+/g,"").replace(/\./g,",").replace(/kr|cm²|cm|m²|m|%/g,"");}
+function checkIn(q,val){
+  const set=[q.ans,...(q.accept||[])].map(norm);
+  return set.includes(norm(val));
+}
+
+/* ---------- MENU ---------- */
+function renderMenu(){
+  S.mode="menu";
+  const list=TOPICS.filter(t=>t.grade===S.grade);
+  setPanel(`
+    <div class="card">
+      <div class="tabs">
+        <button class="tab ${S.grade===6?'on':''}" data-g="6">Årskurs 6</button>
+        <button class="tab ${S.grade===7?'on':''}" data-g="7">Årskurs 7</button>
+      </div>
+      <div class="topics">
+        ${list.map(t=>`<button class="topic" data-t="${t.id}">
+          <span class="ic">${t.ic}</span>
+          <span><span class="tt">${t.name}</span><br><span class="ts">${t.sub}</span></span>
+        </button>`).join("")}
+      </div>
+      <div style="margin-top:12px"><button class="btn coral block" id="examBtn">🎓 Gör provet (blandade uppgifter)</button></div>
+    </div>`);
+  panel.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{S.grade=+b.dataset.g;renderMenu();});
+  panel.querySelectorAll(".topic").forEach(b=>b.onclick=()=>openTopic(b.dataset.t));
+  $("#examBtn").onclick=startExam;
+}
+
+/* ---------- THEORY ---------- */
+function openTopic(id){
+  const t=TOPICS.find(x=>x.id===id);S.topic=t;
+  meMsg(`Jag vill lära mig: ${t.name}`);
+  const th=t.theory;
+  const html=`<div class="theory">
+    <h3>${t.ic} ${t.name}</h3>
+    <p>${th.intro}</p>
+    <h4>✏️ Exempel</h4>${th.ex.map(e=>`<div class="ex">${e}</div>`).join("")}
+    <h4>⚠️ Vanliga misstag</h4><ul>${th.miss.map(m=>`<li>${m}</li>`).join("")}</ul>
+    <h4>💡 Tips & minnesregler</h4><ul>${th.tips.map(m=>`<li>${m}</li>`).join("")}</ul>
+    <h4>📌 Sammanfattning</h4><div class="summary"><ul>${th.sum.map(m=>`<li>${m}</li>`).join("")}</ul></div>
+  </div>`;
+  botMsg(html);
+  botMsg(`Nu kör vi quizen, ${NAME}! 💪 <b>30 frågor</b> – 10 lätta, 10 medel och 10 svåra. Jag rättar varje svar direkt.`);
+  setPanel(`<div class="card">
+    <button class="btn primary block" id="startQ">🚀 Starta quizen</button>
+    <div class="actions" style="margin-top:10px"><button class="btn ghost" id="back">← Välj annat ämne</button></div>
+  </div>`);
+  $("#startQ").onclick=startQuiz;
+  $("#back").onclick=()=>{renderMenu();};
+}
+
+/* ---------- QUIZ ---------- */
+function startQuiz(){
+  const t=S.topic;
+  S.queue=[
+    ...t.q.latt.map(q=>({...q,lvl:"latt"})),
+    ...t.q.medel.map(q=>({...q,lvl:"medel"})),
+    ...t.q.svar.map(q=>({...q,lvl:"svar"}))
+  ];
+  S.idx=0;S.correct=0;S.mode="quiz";
+  botMsg(`Lycka till! ⭐ Svara i lugn och ro.`);
+  showQuestion();
+}
+const LVL={latt:"Lätt",medel:"Medel",svar:"Svår"};
+function showQuestion(){
+  if(S.idx>=S.queue.length)return quizDone();
+  const q=S.queue[S.idx];
+  const prog=Math.round((S.idx/S.queue.length)*100);
+  let body="";
+  if(q.t==="mc"){
+    body=`<div class="opts">${q.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="lt">${"ABCD"[i]}</span>${o}</button>`).join("")}</div>`;
+  }else if(q.t==="tf"){
+    body=`<div class="tfrow"><button class="btn" data-v="true">✔ Sant</button><button class="btn" data-v="false">✘ Falskt</button></div>`;
+  }else{
+    body=`<form class="inrow" id="inform"><input id="inbox" autocomplete="off" placeholder="Ditt svar…" inputmode="text"><button class="btn primary" type="submit">Svara</button></form>`;
+  }
+  setPanel(`<div class="card">
+    <div class="qhead"><span class="level ${q.lvl}">${LVL[q.lvl]}</span><span style="color:var(--muted);font-weight:700;font-size:.85rem">Fråga ${S.idx+1} / ${S.queue.length}</span></div>
+    <div class="progress"><i style="width:${prog}%"></i></div>
+    <div class="qtext">${q.q}</div>
+    ${body}
+  </div>`);
+  if(q.t==="mc")panel.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answerQuiz(q,+b.dataset.i,q.opts[b.dataset.i]));
+  else if(q.t==="tf")panel.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>answerQuiz(q,b.dataset.v==="true",b.dataset.v==="true"?"Sant":"Falskt"));
+  else{const f=$("#inform");f.onsubmit=(e)=>{e.preventDefault();const v=$("#inbox").value.trim();if(!v)return;answerQuiz(q,v,v);};$("#inbox").focus();}
+}
+function answerQuiz(q,val,label){
+  let ok;
+  if(q.t==="mc")ok=(val===q.correct);
+  else if(q.t==="tf")ok=(val===q.correct);
+  else ok=checkIn(q,val);
+  meMsg(label);
+  S.total++;
+  if(ok){
+    S.correct++;
+    const praise=["Helt rätt!","Snyggt jobbat!","Precis rätt, "+NAME+"!","Toppen! ⭐","Perfekt!","Ja! Du fixade det!"];
+    botMsg(`<span class="tag g">Rätt</span><br><b>${praise[S.total%praise.length]}</b><br>${q.ex}`,"good");
+    burst();
+  }else{
+    let correctTxt;
+    if(q.t==="mc")correctTxt=`${"ABCD"[q.correct]}: ${q.opts[q.correct]}`;
+    else if(q.t==="tf")correctTxt=q.correct?"Sant":"Falskt";
+    else correctTxt=q.ans;
+    botMsg(`<span class="tag b">Inte riktigt</span><br>Rätt svar är <b>${correctTxt}</b>.
+      <div class="steps"><span class="k">Så här löser du det</span><br>${q.ex}</div>
+      <div class="mini">Ta det lugnt – nu vet du hur nästa liknande går. 💛</div>`,"bad");
+  }
+  scoreEl.textContent=S.correct+ (S.mode==="quiz"? 0:0);
+  updateScoreDisplay();
+  S.idx++;
+  setPanel(`<div class="card"><button class="btn primary block" id="next">${S.idx>=S.queue.length?"Se resultat 🏁":"Nästa fråga →"}</button></div>`);
+  $("#next").onclick=showQuestion;
+}
+function updateScoreDisplay(){scoreEl.textContent=S.correct;totalEl.textContent=S.total;}
+function quizDone(){
+  S.mode="menu";
+  const n=S.queue.length,c=S.correct;
+  const pct=Math.round(c/n*100);
+  let msg,emoji;
+  if(pct>=90){msg="Fantastiskt jobbat!";emoji="🏆";}
+  else if(pct>=70){msg="Riktigt bra gjort!";emoji="🌟";}
+  else if(pct>=50){msg="Bra kämpat – du är på väg!";emoji="💪";}
+  else{msg="Bra att du tränar – öva lite till så lossnar det!";emoji="🌱";}
+  botMsg(`<div class="gradebox"><div style="font-size:2.4rem">${emoji}</div>
+    <div class="grade">${c} / ${n}</div>
+    <div style="color:var(--muted);font-weight:700">${pct}% rätt</div></div>
+    <p style="text-align:center;margin-top:6px"><b>${msg}</b></p>`);
+  setPanel(`<div class="card">
+    <button class="btn primary block" id="again">🔁 Gör om samma quiz</button>
+    <div class="actions" style="margin-top:10px">
+      <button class="btn ghost" id="menu">📚 Nytt ämne</button>
+      <button class="btn coral" id="exam">🎓 Gör provet</button>
+    </div></div>`);
+  $("#again").onclick=()=>{botMsg("Vi kör igen! 💪");startQuiz();};
+  $("#menu").onclick=renderMenu;
+  $("#exam").onclick=startExam;
+}
+
+/* ---------- EXAM ---------- */
+function startExam(){
+  meMsg("Jag är redo för provet!");
+  botMsg(`<b>🎓 Matteprov – åk 6/7</b><br>${EXAM.length} uppgifter, totalt <b>${EXAM_MAX} poäng</b>. Blandade områden.
+    <div class="mini">Här får du <b>ingen</b> rättning under provets gång – precis som ett riktigt prov. Rättning och betyg kommer på slutet. Lycka till, ${NAME}! ✨</div>`);
+  S.exam=EXAM.map(q=>({...q,given:null,ok:false}));
+  S.idx=0;S.mode="exam";
+  showExam();
+}
+function showExam(){
+  if(S.idx>=S.exam.length)return examResult();
+  const q=S.exam[S.idx];
+  const prog=Math.round((S.idx/S.exam.length)*100);
+  let body="";
+  if(q.t==="mc")body=`<div class="opts">${q.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="lt">${"ABCD"[i]}</span>${o}</button>`).join("")}</div>`;
+  else body=`<form class="inrow" id="exform"><input id="exbox" autocomplete="off" placeholder="Ditt svar…"><button class="btn primary" type="submit">Nästa →</button></form>`;
+  setPanel(`<div class="card">
+    <div class="qhead"><span class="level medel">Prov · ${q.p} p</span><span style="color:var(--muted);font-weight:700;font-size:.85rem">Uppgift ${S.idx+1} / ${S.exam.length}</span></div>
+    <div class="progress"><i style="width:${prog}%"></i></div>
+    <div class="qtext">${q.q}</div>${body}</div>`);
+  if(q.t==="mc")panel.querySelectorAll(".opt").forEach(b=>b.onclick=()=>recExam(q,+b.dataset.i,q.opts[b.dataset.i]));
+  else{const f=$("#exform");f.onsubmit=(e)=>{e.preventDefault();const v=$("#exbox").value.trim();if(!v)return;recExam(q,v,v);};$("#exbox").focus();}
+}
+function recExam(q,val,label){
+  meMsg(label);
+  q.given=label;
+  q.ok=(q.t==="mc")?(val===q.correct):checkIn(q,val);
+  botMsg(`Svar sparat ✅`);
+  S.idx++;
+  showExam();
+}
+function examResult(){
+  S.mode="menu";
+  let pts=0;
+  const rows=S.exam.map((q,i)=>{
+    if(q.ok)pts+=q.p;
+    let corr;
+    if(q.t==="mc")corr=q.opts[q.correct];else corr=q.ans;
+    return `<div class="steps" style="border-color:${q.ok?'var(--good)':'var(--bad)'};margin:8px 0">
+      <span class="k">${q.ok?'✔ Rätt':'✘ Fel'} · Uppgift ${i+1} (${q.p} p)</span><br>
+      <span style="font-size:.9rem">${q.q}</span><br>
+      Ditt svar: <b>${esc(String(q.given))}</b>${q.ok?"":` · Rätt: <b>${corr}</b>`}
+      ${q.ok?"":`<div class="mini">${q.ex}</div>`}
+    </div>`;
+  }).join("");
+  const pct=Math.round(pts/EXAM_MAX*100);
+  let betyg,col;
+  if(pct>=85){betyg="A";col="var(--good)";}
+  else if(pct>=70){betyg="C";col="var(--teal)";}
+  else if(pct>=50){betyg="E";col="var(--gold)";}
+  else{betyg="Öva mer";col="var(--coral)";}
+  botMsg(`<div class="gradebox">
+    <div style="font-size:.8rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em">Ditt provbetyg</div>
+    <div class="grade" style="color:${col}">${betyg}</div>
+    <div style="font-weight:800;font-size:1.2rem">${pts} / ${EXAM_MAX} poäng</div>
+    <div style="color:var(--muted);font-weight:700">${pct}%</div></div>
+    <div class="bar"><i style="width:${pct}%;background:${col}"></i></div>
+    <p style="text-align:center"><b>${pct>=50?`Snyggt jobbat, ${NAME}! 🎉`:`Bra kämpat, ${NAME}! Träna på det röda så växer du. 🌱`}</b></p>
+    <h4 style="margin-top:12px;color:var(--teal);font-size:.82rem;text-transform:uppercase;letter-spacing:.05em">📋 Full rättning</h4>
+    ${rows}`);
+  if(pct>=50)burst();
+  setPanel(`<div class="card">
+    <button class="btn primary block" id="retry">🔁 Gör provet igen</button>
+    <div class="actions" style="margin-top:10px"><button class="btn ghost" id="menu2">📚 Tillbaka till ämnen</button></div></div>`);
+  $("#retry").onclick=startExam;
+  $("#menu2").onclick=renderMenu;
+}
+
+/* ---------- confetti ---------- */
+const cvs=$("#cfx");let cx,parts=[],raf=null;
+function burst(){
+  if(window.matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  cvs.classList.remove("hidden");
+  cvs.width=innerWidth;cvs.height=innerHeight;cx=cvs.getContext("2d");
+  const cols=["#0E9C93","#FF7A59","#F0B429","#7B61FF","#1CA36B"];
+  for(let i=0;i<70;i++)parts.push({x:innerWidth/2,y:innerHeight*0.4,vx:(Math.cos(i)*6),vy:-(4+ (i%7)),g:0.22,c:cols[i%cols.length],s:5+i%5,life:60+i%30,a:1});
+  if(!raf)tick();
+}
+function tick(){
+  cx.clearRect(0,0,cvs.width,cvs.height);let alive=false;
+  parts.forEach(p=>{if(p.life<=0)return;alive=true;p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.life--;p.a=Math.max(0,p.life/60);
+    cx.globalAlpha=p.a;cx.fillStyle=p.c;cx.fillRect(p.x,p.y,p.s,p.s*1.4);});
+  cx.globalAlpha=1;
+  if(alive)raf=requestAnimationFrame(tick);else{parts=[];raf=null;cvs.classList.add("hidden");}
+}
+
+/* ---------- theme ---------- */
+const tb=$("#themebtn");
+function curTheme(){return document.documentElement.getAttribute("data-theme")|| (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");}
+tb.onclick=()=>{const n=curTheme()==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",n);tb.textContent=n==="dark"?"☀️":"🌙";};
+tb.textContent=curTheme()==="dark"?"☀️":"🌙";
+
+/* ---------- intro ---------- */
+function intro(){
+  botMsg(`Hej <b>${NAME}</b>! 👋 Jag är <b>Fröken Uggla</b>, din mattekompis. 🦉`);
+  botMsg(`Vi ska träna matte för <b>åk 6 och 7</b> tillsammans. För varje ämne får du <b>teori med exempel</b>, sedan en <b>quiz</b> med 30 frågor (lätt → svår), och till sist kan du göra ett riktigt <b>prov med betyg</b>. 🎯`);
+  botMsg(`Välj din <b>årskurs</b> och ett <b>ämne</b> nedan, så sätter vi igång! 👇`);
+  renderMenu();
+}
+intro();
+</script>
+</body>
+</html>
