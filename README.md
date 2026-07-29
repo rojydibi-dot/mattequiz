@@ -11,6 +11,8 @@ För varje ämne:
 3. **Direkt rättning** – rätt svar ger beröm och förklaring; fel svar visar hela lösningen steg för steg.
 4. **Prov** – blandade uppgifter med poäng och betyg (E/C/A) samt full rättning.
 
+Dessutom finns **💬 Chatta med Fröken Uggla** – en inbyggd matte-tutor där man kan skriva egna frågor. Hon räknar ut tal, löser ekvationer, procent och bråk, omvandlar enheter och förklarar begrepp – helt lokalt, utan API-nyckel eller kostnad.
+
 ## Ämnen
 
 **Årskurs 6:** Bråk & decimaltal · Procent · Omkrets & Area · De fyra räknesätten · Enheter · Negativa tal · Vinklar & former · Avrundning & överslag

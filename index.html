@@ -913,10 +913,12 @@ function renderMenu(){
         </button>`).join("")}
       </div>
       <div style="margin-top:12px"><button class="btn coral block" id="examBtn">🎓 Gör provet (blandade uppgifter)</button></div>
+      <div style="margin-top:8px"><button class="btn block" id="chatBtn" style="background:linear-gradient(150deg,var(--violet),#5a44d6);color:#fff;border:none">💬 Chatta med Fröken Uggla</button></div>
     </div>`);
   panel.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{S.grade=+b.dataset.g;renderMenu();});
   panel.querySelectorAll(".topic").forEach(b=>b.onclick=()=>openTopic(b.dataset.t));
   $("#examBtn").onclick=startExam;
+  $("#chatBtn").onclick=renderChat;
 }
 
 /* ---------- THEORY ---------- */
@@ -1121,11 +1123,173 @@ function curTheme(){return document.documentElement.getAttribute("data-theme")||
 tb.onclick=()=>{const n=curTheme()==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",n);tb.textContent=n==="dark"?"☀️":"🌙";};
 tb.textContent=curTheme()==="dark"?"☀️":"🌙";
 
+/* ---------- CHATBOT: Fröken Uggla mattehjälp ---------- */
+function fmt(n){if(n===Infinity)return "∞";if(n===-Infinity)return "−∞";if(isNaN(n))return "?";const r=Math.round(n*10000)/10000;return String(r).replace(".",",");}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t;}return a||1;}
+function simp(n,d){if(d<0){n=-n;d=-d;}const g=gcd(n,d);return[n/g,d/g];}
+function calc(expr){
+  let s=String(expr).replace(/,/g,".");
+  s=s.replace(/(\d+(?:\.\d+)?)\^(\d+)/g,(m,a,b)=>Math.pow(parseFloat(a),parseInt(b)));
+  if(!/^[0-9+\-*/(). ]+$/.test(s)||!/\d/.test(s))return null;
+  s=s.replace(/\s+/g,"");let i=0;
+  const pf=()=>{if(s[i]==="("){i++;const v=pe();if(s[i]===")")i++;return v;}if(s[i]==="-"){i++;return -pf();}let n="";while(i<s.length&&/[0-9.]/.test(s[i]))n+=s[i++];return parseFloat(n);};
+  const pt=()=>{let v=pf();while(s[i]==="*"||s[i]==="/"){const o=s[i++];const f=pf();v=o==="*"?v*f:v/f;}return v;};
+  const pe=()=>{let v=pt();while(s[i]==="+"||s[i]==="-"){const o=s[i++];const t=pt();v=o==="+"?v+t:v-t;}return v;};
+  try{const r=pe();if(i<s.length)return null;return r;}catch(e){return null;}
+}
+function distribute(s){
+  return s.replace(/(-?\d+)\(([^()]+)\)/g,(mm,k,inner)=>{
+    k=parseFloat(k);const o=inner.replace(/-/g,"+-");
+    return o.split("+").filter(Boolean).map(term=>{
+      if(term.indexOf("x")>=0){let c=term.replace("x","");if(c===""||c==="+")c="1";if(c==="-")c="-1";const v=parseFloat(c)*k;return (v>=0?"+":"")+v+"x";}
+      const v=parseFloat(term)*k;return (v>=0?"+":"")+v;
+    }).join("");
+  });
+}
+function parseLinear(side){
+  side=side.replace(/\s+/g,"");if(side==="")return{a:0,b:0};
+  if(/[()]/.test(side))return null;
+  side=side.replace(/-/g,"+-");
+  let a=0,b=0;
+  for(const term of side.split("+").filter(x=>x!=="")){
+    if(term.indexOf("x")>=0){let c=term.replace("x","").replace("*","");if(c===""||c==="+")c="1";if(c==="-")c="-1";const cv=parseFloat(c);if(isNaN(cv))return null;a+=cv;}
+    else{const bv=parseFloat(term);if(isNaN(bv))return null;b+=bv;}
+  }
+  return{a,b};
+}
+function eqHelp(){return `Jag löser ekvationer! ⚖️ Skriv den gärna så här: <kbd>2x + 3 = 11</kbd> eller <kbd>5x − 2 = 3x + 8</kbd>.`;}
+function solveEq(t){
+  const eq=t.replace(/·/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/,/g,".").replace(/\s+/g,"");
+  const m=eq.match(/[-0-9x+*/().]*=[-0-9x+*/().]*/);
+  if(!m)return null;
+  const parts=m[0].split("=");
+  if(parts.length!==2||parts[0]===""||parts[1]==="")return eqHelp();
+  try{
+    const L=parseLinear(distribute(parts[0])),R=parseLinear(distribute(parts[1]));
+    if(!L||!R)return eqHelp();
+    const a=L.a-R.a,b=R.b-L.b;
+    if(a===0)return eqHelp();
+    const xs=fmt(b/a);
+    return `Vi löser <b class="eq">${parts[0].replace(/\*/g,"·")} = ${parts[1].replace(/\*/g,"·")}</b> ⚖️<br>Samla alla x på ena sidan och talen på den andra, dela sedan.<br><b>x = ${xs}</b><br><span class="mini">Kontroll: sätt in x = ${xs} i ekvationen → båda sidor blir lika. ✔</span>`;
+  }catch(e){return eqHelp();}
+}
+function tryPercent(t){
+  t=t.replace(/,/g,".");
+  let m=t.match(/(\d+(?:\.\d+)?)\s*(?:%|procent)\s*av\s*(\d+(?:\.\d+)?)/);
+  if(m){const p=+m[1],y=+m[2],r=p/100*y;return `<b>${fmt(p)} % av ${fmt(y)} = ${fmt(r)}</b> 💯<br><span class="mini">${fmt(y)} ÷ 100 = ${fmt(y/100)} (det är 1 %), sedan · ${fmt(p)} = ${fmt(r)}.</span>`;}
+  m=t.match(/(\d+(?:\.\d+)?)\s*av\s*(\d+(?:\.\d+)?)/);
+  if(m&&/procent|%/.test(t)){const x=+m[1],y=+m[2],r=x/y*100;return `<b>${fmt(x)} av ${fmt(y)} = ${fmt(r)} %</b> 💯<br><span class="mini">${fmt(x)}/${fmt(y)} = ${fmt(x/y)} = ${fmt(r)} %.</span>`;}
+  return null;
+}
+function dOp(o){return (o==="*"||o==="·")?"·":o==="/"?"÷":o;}
+function tryFraction(t){
+  let m=t.match(/(\d+)\s*\/\s*(\d+)\s*([+\-*/·÷])\s*(\d+)\s*\/\s*(\d+)/);
+  if(m){
+    const a=+m[1],b=+m[2],op=m[3],c=+m[4],d=+m[5];let n,den;
+    if(op==="+"){den=b*d;n=a*d+c*b;}else if(op==="-"){den=b*d;n=a*d-c*b;}
+    else if(op==="*"||op==="·"){den=b*d;n=a*c;}else{den=b*c;n=a*d;}
+    const[sn,sd]=simp(n,den);const ans=sd===1?`${sn}`:`${sn}/${sd}`;
+    let step;
+    if((op==="+"||op==="-")&&b!==d)step=`Gemensam nämnare ${b*d}: ${a}/${b} = ${a*d}/${b*d} och ${c}/${d} = ${c*b}/${b*d}.`;
+    else if(op==="+"||op==="-")step=`Samma nämnare – räkna ihop täljarna.`;
+    else if(op==="*"||op==="·")step=`Multiplicera rakt: ${a}·${c} = ${a*c} och ${b}·${d} = ${b*d}.`;
+    else step=`Dividera = gånga med det omvända: ${a}/${b} · ${d}/${c}.`;
+    return `<b>${a}/${b} ${dOp(op)} ${c}/${d} = ${ans}</b> 🍕<br><span class="mini">${step}</span>`;
+  }
+  m=t.match(/(\d+)\s*\/\s*(\d+)\s*av\s*(\d+(?:[.,]\d+)?)/);
+  if(m){const a=+m[1],b=+m[2],N=parseFloat(m[3].replace(",","."));const r=a/b*N;return `<b>${a}/${b} av ${fmt(N)} = ${fmt(r)}</b> 🍕<br><span class="mini">${fmt(N)} ÷ ${b} = ${fmt(N/b)}, sedan · ${a} = ${fmt(r)}.</span>`;}
+  if(/förkorta/.test(t)){m=t.match(/(\d+)\s*\/\s*(\d+)/);if(m){const a=+m[1],b=+m[2];const[sn,sd]=simp(a,b);return `<b>${a}/${b} = ${sn}/${sd}</b> 🍕<br><span class="mini">Största gemensamma delaren är ${gcd(a,b)}.</span>`;}}
+  m=t.match(/(\d+)\s*\/\s*(\d+)\s*(?:i|som)\s*decimal/);
+  if(m){const a=+m[1],b=+m[2];return `<b>${a}/${b} = ${fmt(a/b)}</b> 🍕<br><span class="mini">${a} ÷ ${b} = ${fmt(a/b)}.</span>`;}
+  return null;
+}
+const UNITS={langd:{mm:1,cm:10,dm:100,m:1000,km:1000000},volym:{ml:1,cl:10,dl:100,l:1000},vikt:{g:1,hg:100,kg:1000,ton:1000000},tid:{s:1,min:60,h:3600}};
+function normU(u){return {liter:"l",sekunder:"s",sekund:"s",minuter:"min",minut:"min",timmar:"h",timme:"h"}[u]||u;}
+function ufam(u){for(const f in UNITS)if(u in UNITS[f])return f;return null;}
+const UALT="mm|cm|dm|km|ml|cl|dl|liter|hg|kg|ton|sekunder|sekund|minuter|minut|timmar|timme|min|m|l|g|s|h";
+function tryUnit(t){
+  t=t.replace(/,/g,".");
+  const src=t.match(new RegExp("(\\d+(?:\\.\\d+)?)\\s*("+UALT+")\\b"));
+  if(!src)return null;
+  const num=parseFloat(src[1]),u1=normU(src[2]);
+  let u2=null,m=t.match(new RegExp("(?:i|till)\\s*("+UALT+")\\b"));
+  if(m)u2=normU(m[1]);
+  if(!u2){m=t.match(new RegExp("hur (?:många|mycket)\\s*("+UALT+")\\b"));if(m)u2=normU(m[1]);}
+  if(!u2)return null;
+  const f1=ufam(u1),f2=ufam(u2);
+  if(!f1||f1!==f2)return null;
+  const res=num*UNITS[f1][u1]/UNITS[f2][u2];
+  return `<b>${fmt(num)} ${src[2]} = ${fmt(res)} ${u2}</b> 📏<br><span class="mini">Från stor enhet till liten gångar du, från liten till stor delar du.</span>`;
+}
+function trySqrt(t){const m=t.match(/(?:roten ur|kvadratroten (?:ur|av)|sqrt)\s*(\d+(?:[.,]\d+)?)/);if(!m)return null;const n=parseFloat(m[1].replace(",","."));return `<b>√${fmt(n)} = ${fmt(Math.sqrt(n))}</b> ✏️`;}
+function tryArithmetic(t){
+  if(/=/.test(t))return null;
+  let s=t.replace(/−/g,"-").replace(/hälften av/g,"0.5*").replace(/dubbelt (?:av|så mycket som)/g,"2*").replace(/en tredjedel av/g,"(1/3)*").replace(/en fjärdedel av/g,"(1/4)*")
+    .replace(/upphöjt till|upphöjt i/g,"^").replace(/i kvadrat/g,"^2")
+    .replace(/gånger|multiplicerat med|multiplicera|ggr/g,"*").replace(/dividerat med|dividerat på|delat med|delat på|delat/g,"/")
+    .replace(/plus/g,"+").replace(/minus/g,"-").replace(/×|·/g,"*").replace(/÷/g,"/").replace(/,/g,".");
+  const expr=s.replace(/[^0-9+\-*/^(). ]/g,"").replace(/\s+/g,"");
+  if(!/[+\-*/^]/.test(expr)||!/\d/.test(expr))return null;
+  const val=calc(expr);
+  if(val===null)return null;
+  const disp=expr.replace(/\*/g," · ").replace(/\//g," ÷ ").replace(/\^/g,"^");
+  return `<b>${disp} = ${fmt(val)}</b> ✏️`;
+}
+const CMAP=[["brak",["bråk","täljare","nämnare"]],["procent",["procent","rabatt","moms","hundradel"]],["geometri",["area","omkrets"]],["ekvationer",["ekvation","obekant"]],["negativa",["negativ","under noll","minustal"]],["vinklar",["vinkel","grader","spetsig","trubbig"]],["statistik",["medelvärde","median","typvärde","statistik"]],["sannolikhet",["sannolikhet","chans","tärning"]],["skala",["skala","karta","ritning"]],["koordinater",["koordinat","origo","x-axel","y-axel","proportion"]],["avrundning",["avrunda","avrundning","överslag"]],["enheter",["enhet","omvandla","meter","liter","gram","kilo"]],["algebra",["algebra","uttryck","variabel"]],["tal7",["decimal","tiondel"]],["raknesatt",["räknesätt","multiplikation","division","prioritering","parentes"]]];
+function tryConcept(t){
+  for(const [id,keys] of CMAP){
+    if(keys.some(k=>t.includes(k))){
+      const top=TOPICS.find(x=>x.id===id);if(!top)continue;const th=top.theory;
+      return `<b>${top.ic} ${top.name}</b><br>${th.intro}<br><div class="ex">${th.ex[0]}</div><span class="mini">💡 ${th.tips[0]}</span><br><span class="mini">Vill du träna? Välj <b>${top.name}</b> i menyn för en quiz. 📝</span>`;
+    }
+  }
+  return null;
+}
+function fallback(){return `Jag är din mattekompis! 🦉 Jag kan hjälpa dig att:<br>• Räkna ut tal – <kbd>12 · 8</kbd> eller <kbd>144 ÷ 6</kbd><br>• Lösa ekvationer – <kbd>2x + 3 = 11</kbd><br>• Räkna procent – <kbd>25% av 200</kbd><br>• Räkna med bråk – <kbd>1/2 + 1/4</kbd><br>• Omvandla enheter – <kbd>2 m i cm</kbd><br>• Förklara begrepp – <kbd>vad är bråk?</kbd><br>Vad vill du börja med, ${NAME}?`;}
+function trySmalltalk(t){
+  if(/\b(hej|tja|tjena|hallå|hejsan|halloj|tjabba)\b/.test(t))return `Hej ${NAME}! 🦉 Vad kul att du vill räkna! Fråga mig vad du vill om matte.`;
+  if(/hur mår du|hur är läget|läget|hur går det/.test(t))return `Jag mår toppen, tack! 😊 Redo att hjälpa dig. Vad vill du räkna på?`;
+  if(/vad heter du|vem är du/.test(t))return `Jag heter <b>Fröken Uggla</b> 🦉 – din mattekompis!`;
+  if(/\b(tack|tackar)\b/.test(t))return `Varsågod, ${NAME}! 💛 Fråga gärna mer.`;
+  if(/hej då|hejdå|vi ses|bye|god natt/.test(t))return `Vi ses, ${NAME}! Kom tillbaka och räkna mer snart. 👋`;
+  if(/förstår inte|fattar inte|svårt|jag kan inte/.test(t))return `Ingen fara – vi tar det tillsammans! 💪 Vilket ämne handlar det om? Skriv t.ex. <kbd>vad är procent?</kbd> så förklarar jag.`;
+  if(/älskar dig|gillar dig|bäst/.test(t))return `Åh, tack ${NAME}! 💛 Du är också bäst. Nu kör vi lite matte!`;
+  if(/hjälp|kan du/.test(t))return fallback();
+  return null;
+}
+function respond(raw){
+  const t=raw.toLowerCase().trim();
+  if(!t)return fallback();
+  if(/=/.test(t)&&/x/.test(t)){const r=solveEq(t);if(r)return r;}
+  let r=tryPercent(t);if(r)return r;
+  r=tryFraction(t);if(r)return r;
+  r=tryUnit(t);if(r)return r;
+  r=trySqrt(t);if(r)return r;
+  r=tryArithmetic(t);if(r)return r;
+  r=tryConcept(t);if(r)return r;
+  r=trySmalltalk(t);if(r)return r;
+  return fallback();
+}
+function renderChat(){
+  S.mode="chat";
+  botMsg(`💬 <b>Chatta med mig, ${NAME}!</b> Fråga vad du vill om matte, så hjälper jag dig steg för steg. Prova t.ex. <kbd>2x+3=11</kbd>, <kbd>25% av 200</kbd>, <kbd>1/2 + 1/4</kbd> eller <kbd>vad är bråk?</kbd>`);
+  chatPanel();
+}
+function chatPanel(){
+  setPanel(`<div class="card">
+    <form class="inrow" id="chatform"><input id="chatbox" autocomplete="off" placeholder="Skriv din fråga…"><button class="btn primary" type="submit">Skicka</button></form>
+    <div class="actions" style="margin-top:10px"><button class="btn ghost" id="backchat">← Tillbaka till menyn</button></div>
+  </div>`);
+  $("#chatform").onsubmit=(e)=>{e.preventDefault();const v=$("#chatbox").value.trim();if(!v)return;meMsg(v);botMsg(respond(v));chatPanel();};
+  $("#backchat").onclick=renderMenu;
+  $("#chatbox").focus();
+}
+
 /* ---------- intro ---------- */
 function intro(){
   botMsg(`Hej <b>${NAME}</b>! 👋 Jag är <b>Fröken Uggla</b>, din mattekompis. 🦉`);
   botMsg(`Vi ska träna matte för <b>åk 6 och 7</b> tillsammans. För varje ämne får du <b>teori med exempel</b>, sedan en <b>quiz</b> med 30 frågor (lätt → svår), och till sist kan du göra ett riktigt <b>prov med betyg</b>. 🎯`);
-  botMsg(`Välj din <b>årskurs</b> och ett <b>ämne</b> nedan, så sätter vi igång! 👇`);
+  botMsg(`Välj din <b>årskurs</b> och ett <b>ämne</b> nedan, så sätter vi igång! Vill du hellre ställa egna frågor? Tryck på <b>💬 Chatta med Fröken Uggla</b>. 👇`);
   renderMenu();
 }
 intro();
